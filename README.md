@@ -73,8 +73,8 @@ Essas tecnologias juntas fornecerão a base para um sistema completo, modular e 
 2. *Autenticação e controle de acesso*  
    - Implementar a autenticação dos usuários, garantindo que apenas médicos responsáveis possam acessar os exames dos seus pacientes.
 
-3. *Envio e armazenamento de ECGs*  
-   - Desenvolver a funcionalidade de envio de exames de ECG e armazená-los de forma segura no sistema.
+3. *Integração do classificador automático de ECGs*
+   - Integrar o modelo de classificação de ECG baseado em PyTorch ao backend Flask, permitindo a classificação automática dos exames.
 
 4. *CRUD de perfis - Médico*  
    - Implementar as funcionalidades de criação, leitura, atualização e exclusão dos perfis de médicos.
