@@ -27,3 +27,54 @@ Para facilitar o processo de desenvolvimento e deploy, Docker será utilizado pa
 O classificador de exames utilizado no projeto foi implementado em PyTorch, uma das bibliotecas mais populares para machine learning. PyTorch oferece uma interface intuitiva e flexível, permitindo o desenvolvimento ágil de redes neurais e modelos de deep learning. No projeto, o modelo já está pronto e será integrado ao back-end Flask para realizar a classificação dos exames enviados. Graças ao PyTorch, o modelo pode ser facilmente ajustado e otimizado conforme as necessidades do sistema, com suporte a processamento em GPU para acelerar a inferência dos exames.
 
 Essas tecnologias juntas fornecerão a base para um sistema completo, modular e eficiente para o recebimento e classificação de eletrocardiogramas.
+
+### Backlog do produto
+1. *Cadastro e autenticação de usuários (médicos e pacientes)*  
+   - Como médico/paciente, quero poder me cadastrar e autenticar no sistema, para garantir a segurança do acesso aos exames.
+
+2. *Perfil do médico e paciente*  
+   - Como médico, quero gerenciar meu perfil para poder atualizar minhas informações de contato e especialização.
+   - Como paciente, quero gerenciar meu perfil, permitindo atualizações de informações pessoais.
+
+3. *Envio e armazenamento seguro de ECGs*  
+   - Como médico, quero poder enviar e armazenar exames de ECG de forma segura no sistema, garantindo a integridade dos dados.
+
+4. *Classificação automática de ECGs*  
+   - Como médico, quero que o sistema classifique automaticamente os ECGs com base no modelo proposto, facilitando a análise de possíveis distúrbios cardíacos.
+
+5. *Visualização dos resultados dos exames*  
+   - Como médico/paciente, quero visualizar os resultados dos exames de ECG em tempo real, permitindo uma análise rápida e informativa.
+
+6. *Anotações dos médicos nos exames*  
+   - Como médico, quero adicionar anotações aos exames de ECG para registrar observações clínicas sobre os resultados.
+
+7. *Controle de acesso baseado em perfis de usuário*  
+   - Como administrador do sistema, quero garantir que apenas médicos responsáveis possam acessar os exames dos seus pacientes, para assegurar a privacidade e segurança dos dados.
+
+8. *Histórico de exames de pacientes*  
+   - Como paciente, quero acessar um histórico de exames de ECG que fiz, permitindo a consulta e o acompanhamento da minha saúde ao longo do tempo.
+
+9. *Substituição flexível do classificador*  
+   - Como desenvolvedor, quero garantir que o sistema permita a substituição do modelo de classificação de ECGs por outros no futuro, de maneira simples e modular.
+
+10. *Integração com PyTorch para processamento em GPU*  
+    - Como desenvolvedor, quero integrar o classificador ao PyTorch com suporte para processamento em GPU, permitindo a rápida inferência dos resultados dos exames.
+      
+11. *Perfil do adiministrador*
+    - Como administrador, quero poder criar, atualizar, deletar e obter pacientes e médicos dentro do sistema.
+    - Como administrador, quero poder gerenciar os acessos dos pacientes e médicos.
+
+---
+### Backlog da Sprint
+
+1. *CRUD de perfis - Paciente*  
+   - Implementar as funcionalidades de criação, leitura, atualização e exclusão dos perfis de pacientes.
+
+2. *Autenticação e controle de acesso*  
+   - Implementar a autenticação dos usuários, garantindo que apenas médicos responsáveis possam acessar os exames dos seus pacientes.
+
+3. *Envio e armazenamento de ECGs*  
+   - Desenvolver a funcionalidade de envio de exames de ECG e armazená-los de forma segura no sistema.
+
+4. *CRUD de perfis - Médico*  
+   - Implementar as funcionalidades de criação, leitura, atualização e exclusão dos perfis de médicos.
