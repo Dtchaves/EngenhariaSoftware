@@ -1,0 +1,15 @@
+# Error Codes
+SUCCESS_CODE = 200
+BAD_REQUEST_CODE = 400
+UNAUTHORIZED_CODE = 401
+FORBIDDEN_CODE = 403
+NOT_FOUND_CODE = 404
+SERVER_ERROR_CODE = 500
+
+# Messages
+SUCCESS_MESSAGE = 'Operation successful'
+LOGIN_REQUIRED_MESSAGE = 'Login required'
+INVALID_CREDENTIALS_MESSAGE = 'Invalid credentials'
+UNAUTHORIZED_ACCESS_MESSAGE = 'Unauthorized access'
+FILE_NOT_FOUND_MESSAGE = 'No selected file'
+FILE_UPLOAD_SUCCESS = 'File uploaded and processed successfully'
