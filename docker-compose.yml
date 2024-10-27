@@ -1,0 +1,43 @@
+services:
+  # nextapp:
+  #   container_name: nextapp
+  #   image: nextapp:1.0.0
+  #   build:
+  #     context: ./client
+  #     dockerfile: next.dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - flaskapp
+
+  flaskapp:
+    build:
+      context: ./server
+      dockerfile: flask.dockerfile
+    container_name: flaskapp
+    image: flaskapp:1.0.0
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}

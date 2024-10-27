@@ -1,0 +1,17 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+Flask-Cors
+psycopg2-binary
+flask_login
+flask_bcrypt
+flask_marshmallow
+marshmallow-sqlalchemy
+torch
+torchvision
+Pillow
+redis
+pytest
+requests
+werkzeug
