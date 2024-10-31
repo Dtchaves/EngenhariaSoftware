@@ -1,12 +1,13 @@
 from flask import Flask
 from flask_login import LoginManager
 from api.models import db, Patient, Doctor, Admin
+from api.config import Config
 
 login_manager = LoginManager()
 
 def create_app(model_path=None):
     app = Flask(__name__)
-    app.config.from_object('api.config.Config')
+    app.config.from_object(Config)
 
     if model_path:
         app.config['MODEL_PATH'] = model_path

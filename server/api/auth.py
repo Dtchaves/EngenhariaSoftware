@@ -5,20 +5,19 @@ from api.constants import UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVAL
 
 auth = Blueprint('auth', __name__)
 
-@auth.before_request
-def restrict_access():
-    print('aaa')
-    if not current_user.is_authenticated:
-        return jsonify({"message": "Login required"}), UNAUTHORIZED_CODE
+# @auth.before_request
+# def restrict_access():
+#     if not current_user.is_authenticated:
+#         return jsonify({"message": "Login required"}), UNAUTHORIZED_CODE
     
-    restricted_paths = {
-        "patient": ["/doctors", "/admin"],
-        "doctor": ["/admin"],
-        "admin": []
-    }
+#     restricted_paths = {
+#         "patient": ["/doctors", "/admin"],
+#         "doctor": ["/admin"],
+#         "admin": []
+#     }
 
-    if any(request.path.startswith(path) for path in restricted_paths.get(current_user.role, [])):
-        return jsonify({"message": "Unauthorized access"}), FORBIDDEN_CODE
+#     if any(request.path.startswith(path) for path in restricted_paths.get(current_user.role, [])):
+#         return jsonify({"message": "Unauthorized access"}), FORBIDDEN_CODE
 
 # # Patient registration
 # @auth.route('/register/patient', methods=['POST'])
@@ -59,16 +58,16 @@ def login():
     user = None
     user_role = data['role']
 
-    if user_role == 'patient':
+    if user_role == 'Patient':
         user = Patient.query.filter_by(email=data['email']).first()
-    elif user_role == 'doctor':
+    elif user_role == 'Doctor':
         user = Doctor.query.filter_by(crm=data['crm']).first()
-    elif user_role == 'admin':
+    elif user_role == 'Admin':
         user = Admin.query.filter_by(email=data['email']).first()
 
     if user and user.check_password(data['password']):
         login_user(user)
-        return jsonify({'message': f'Welcome {user.name}', 'role': user.role}), SUCCESS_CODE
+        return jsonify({'message': f'Welcome {user.name}', 'role': str(user.role)}), SUCCESS_CODE
 
     return jsonify({'message': INVALID_CREDENTIALS_MESSAGE}), UNAUTHORIZED_CODE
 

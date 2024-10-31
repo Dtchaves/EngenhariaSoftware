@@ -78,3 +78,138 @@ Essas tecnologias juntas fornecerão a base para um sistema completo, modular e 
 
 4. *CRUD de perfis - Médico*  
    - Implementar as funcionalidades de criação, leitura, atualização e exclusão dos perfis de médicos.
+
+# Execução do Projeto
+
+## Pré-requisitos
+- Docker e Docker Compose instalados
+- Python 3.12 ou superior
+- Virtualenv para gerenciamento de ambiente virtual
+- VSCode (opcional, para depuração com debugger)
+
+## Passo a Passo para Primeira Execução
+
+### 1. Inicialize o Banco de Dados com Docker
+No diretório raiz do projeto, execute o seguinte comando para compilar a imagem e iniciar o banco de dados:
+
+```bash
+docker-compose up --build -d db
+```
+
+### 2. Configure o Ambiente Virtual para o Backend
+No diretório server, crie e ative um ambiente virtual:
+
+```bash
+cd server
+python3 -m venv venv
+source venv/bin/activate  # No Windows, use venv\Scripts\activate
+```
+
+### 3. Instale as Dependências do Backend
+Ainda no diretório server, instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Claro, aqui está o código formatado corretamente em Markdown para o arquivo 
+
+README.md
+
+:
+
+```markdown
+# Execução do Projeto
+
+## Pré-requisitos
+- Docker e Docker Compose instalados
+- Python 3.12 ou superior
+- Virtualenv para gerenciamento de ambiente virtual
+- VSCode (opcional, para depuração com debugger)
+
+## Passo a Passo para Primeira Execução
+
+### 1. Inicialize o Banco de Dados com Docker
+No diretório raiz do projeto, execute o seguinte comando para compilar a imagem e iniciar o banco de dados:
+
+```bash
+sudo apt update
+sudo apt install postgresql-client
+docker-compose up --build -d db
+```
+
+### 2. Configure o Ambiente Virtual para o Backend
+No diretório `server`, crie e ative um ambiente virtual:
+
+```bash
+cd server
+python3 -m venv venv
+source venv/bin/activate  # No Windows, use venv\Scripts\activate
+```
+
+### 3. Instale as Dependências do Backend
+Ainda no diretório `server`, instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Execute o Backend
+Execute a aplicação no modo de depuração (se preferir, também pode usar o debugger do VSCode):
+
+```bash
+flask run
+```
+
+## Execuções Posteriores
+
+### Reiniciar o Banco de Dados
+Para iniciar o banco de dados sem recompilar a imagem, apenas execute:
+
+```bash
+docker-compose up -d db
+```
+
+### Reiniciar o Backend
+Sempre que iniciar uma nova sessão de desenvolvimento:
+
+Ative o ambiente virtual:
+
+```bash
+cd server
+source venv/bin/activate  # No Windows, use venv\Scripts\activate
+```
+
+Execute o backend com:
+
+```bash
+flask run
+```
+
+## Instruções para o Frontend
+
+### 1. Instale as Dependências do Frontend
+No diretório `client`, instale as dependências do projeto com:
+
+```bash
+cd client
+npm install
+```
+
+### 2. Execute o Frontend
+Para rodar o frontend em ambiente de desenvolvimento, execute:
+
+```bash
+npm run dev
+```
+
+Isso iniciará o frontend, geralmente acessível em [http://localhost:3000](http://localhost:3000).
+
+## Estrutura de Rede
+- Backend: [http://localhost:4000](http://localhost:4000)
+- Banco de Dados (Docker): `localhost:5432`
+- Frontend: [http://localhost:3000](http://localhost:3000)
+
+## Solução de Problemas
+- Caso o backend não consiga conectar ao banco de dados, verifique se o banco está rodando com `docker ps`.
+- Se houver mudanças nas dependências, lembre-se de atualizar o ambiente com `pip install -r requirements.txt` no backend ou `npm install` no frontend.

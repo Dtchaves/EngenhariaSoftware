@@ -45,7 +45,6 @@ export function Register() {
         >
           <option value={UserRole.Doctor}>Doutor</option>
           <option value={UserRole.Patient}>Paciente</option>
-          <option value={UserRole.Admin}>Admin</option>
         </select>
       </div>
 

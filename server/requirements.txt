@@ -2,7 +2,7 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-JWT-Extended
-Flask-Cors
+flask_cors
 psycopg2-binary
 flask_login
 flask_bcrypt
@@ -15,3 +15,5 @@ redis
 pytest
 requests
 werkzeug
+debugpy
+python-dotenv

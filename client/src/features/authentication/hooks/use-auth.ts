@@ -2,11 +2,11 @@ import { useState } from "react";
 import axios from "axios";
 import { apiUrl } from "@/constants/constants";
 import { LoginCredentials, RegisterCredentials } from "@/types/auth-types";
-import { Admin, Doctor, Patient } from "@/types/types";
+import { Doctor, Patient } from "@/types/types";
 import { useRouter } from "next/router";
 
 export function useAuth() {
-  const [user, setUser] = useState<Doctor | Patient | Admin | null>(null);
+  const [user, setUser] = useState<Doctor | Patient | null>(null);
   const router = useRouter();
 
   // useEffect(() => {
@@ -43,7 +43,6 @@ export function useAuth() {
       const suffixes: { [key: string]: string } = {
         Doctor: "doctors",
         Patient: "patients",
-        Admin: "admins",
       };
       const response = await axios.post(
         `${apiUrl}/api/${suffixes[role]}`,
