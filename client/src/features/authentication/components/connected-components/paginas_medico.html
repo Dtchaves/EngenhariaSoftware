@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG System</title>
+    
+    <!-- Importação da fonte Tomorrow do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos básicos para a página */
+        body {
+            margin: 0;
+            font-family: 'Tomorrow', sans-serif;
+        }
+
+        /* Estilo da barra de topo */
+        .top-bar {
+            background-color: #8a050c; /* Cor de fundo azul */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px; /* Ajusta o padding horizontal */
+            color: white;
+            height: 80px;
+        }
+
+        .top-bar .left, .top-bar .right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Centralizar o conteúdo da seção esquerda */
+        .top-bar .left {
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* Estilo do botão de opções */
+        .options-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 70px; /* Tamanho dos três traços */
+            height: 100%; /* Ocupa toda a altura da barra de topo */
+            padding: 0 15px;
+            cursor: pointer;
+            margin-left: 0px;
+        }
+
+        /* Estilo do texto "ECG SYSTEM" */
+        .logo-text {
+            font-size: 30px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        /* Estilo para o ícone do coração */
+        .heart-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Estilo dos logotipos à direita */
+        .logo {
+            margin-right: 30px; /* Espaço entre as logos */
+            margin-left: 50px; /* Espaço entre as logos */
+            height: 35px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de topo -->
+    <div class="top-bar">
+        <!-- Botão para abrir a central de opções -->
+        <button class="options-button" onclick="abrirCentralDeOpcoes()">≡</button>
+
+        <!-- Seção esquerda com texto e ícone de coração centralizados -->
+        <div class="left">
+            <span class="logo-text">ECG SYSTEM</span>
+            <img src="logos/Interactive.png" alt="Heart Icon" class="heart-icon">
+        </div>
+        
+        <!-- Seção direita com logotipos -->
+        <div class="right">
+            <img src="logos/logo-ufmg.png" alt="Logo 1" class="logo">
+        </div>
+    </div>
+    
+    <!-- Conteúdo da página -->
+    <div>
+        <!-- Seu conteúdo aqui -->
+    </div>
+
+    <script>
+        function abrirCentralDeOpcoes() {
+            // Função para abrir a central de opções
+            alert('Central de opções aberta');
+        }
+    </script>
+</body>
+</html>
