@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response
+from flask_login import login_user, logout_user, login_required, current_user
 from api.schemas import patient_schema, patients_schema
 from api.models import db, Patient
 
@@ -34,6 +35,7 @@ def get_patients():
 
 # Get a specific patient by ID
 @routes.route('/patients/<id>', methods=['GET'])
+@login_required
 def get_patient(id):
     try:
         patient = Patient.query.get(id)

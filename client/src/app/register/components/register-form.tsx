@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import FormInput from '../../../../components/FormInput';
-import { RegisterCredentials } from '@/types/auth-types';
-import { UserRole } from '@/types/types';
 import { useRouter } from 'next/router';
+import { RegisterCredentials, UserRole } from '@/app/shared/utils';
+import FormInput from '@/app/shared/components/FormInput';
 
-interface CreateUserFormProps {
+interface RegisterFormProps {
   onSubmit: (user: RegisterCredentials) => void;
   initialData: RegisterCredentials;
   buttonText: string;
   bgColor: string;
 }
 
-export const CreateUserForm = ({ onSubmit, initialData, buttonText, bgColor }: CreateUserFormProps) => {
+export const RegisterForm = ({ onSubmit, initialData, buttonText, bgColor }: RegisterFormProps) => {
   const [userData, setUserData] = useState<RegisterCredentials>(initialData);
   // console.log(userData);
   useEffect(() => {

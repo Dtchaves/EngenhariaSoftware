@@ -51,6 +51,11 @@ auth = Blueprint('auth', __name__)
 #     db.session.commit()
 #     return jsonify({'message': 'Admin registered successfully'}), SUCCESS_CODE
 
+@auth.route('/check', methods=['GET'])
+@login_required
+def check_authentication():
+    return jsonify({'authenticated': True, 'user': {'name': current_user.name, 'role': current_user.role}}), SUCCESS_CODE
+
 # Login for patients, doctors, and admins
 @auth.route('/login', methods=['POST'])
 def login():

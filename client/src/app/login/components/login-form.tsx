@@ -1,6 +1,7 @@
+'use client'
 import React, { useEffect, useState } from 'react';
-import FormInput from '../../../../components/FormInput';
-import { LoginCredentials } from '@/types/auth-types';
+import FormInput from '@/app/shared/components/FormInput';
+import { LoginCredentials } from '@/app/shared/utils';
 
 interface LoginFormProps {
   onSubmit: (user: LoginCredentials) => void;

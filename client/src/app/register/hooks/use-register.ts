@@ -1,11 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import { apiUrl } from "@/constants/constants";
-import { LoginCredentials, RegisterCredentials } from "@/types/auth-types";
-import { Doctor, Patient } from "@/types/types";
 import { useRouter } from "next/router";
+import { apiUrl } from "@/app/shared/constants";
+import { Doctor, RegisterCredentials, Patient } from "@/app/shared/utils";
 
-export function useAuth() {
+export function useRegister() {
   const [user, setUser] = useState<Doctor | Patient | null>(null);
   const router = useRouter();
 
@@ -23,20 +22,6 @@ export function useAuth() {
   //   checkAuth();
   // }, []);
 
-  const login = async (credentials: LoginCredentials) => {
-    try {
-      console.log("credentials: ", credentials);
-      const response = await axios.post(
-        `${apiUrl}/api/login`,
-        credentials
-      );
-      setUser(response.data.user);
-      router.push("/");
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
-
   const register = async (credentials: RegisterCredentials) => {
     try {
       const role = credentials.role;
@@ -49,26 +34,15 @@ export function useAuth() {
         credentials
       );
       setUser(response.data.user);
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       console.error("Registration failed:", error);
     }
   };
 
-  const logout = async () => {
-    try {
-      await axios.get(`${apiUrl}/api/auth/logout`);
-      setUser(null);
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   return {
-    user,
-    login,
     register,
-    logout,
     isAuthenticated: !!user,
   };
 };
