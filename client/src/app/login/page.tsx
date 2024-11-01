@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { UserColor, UserRole } from "../shared/utils";
 import { LoginForm } from "./components/login-form";
-import Layout from "../layout";
 import { useLogin } from "./hooks/use-login";
 
 export default function Login() {
@@ -44,21 +43,20 @@ export default function Login() {
   const interfaceName = `${userRole}-interface`;
 
   return (
-    <Layout>
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-lg text-center">
           <h1 className="text-3xl font-bold text-blue-500">Login</h1>
-          <p className="text-gray-500">Faça login para acessar o sistema</p>
+          <p className="text-black">Faça login para acessar o sistema</p>
           <div className="w-full max-w-md mx-auto mt-6">
             <div className="mb-4">
-              <label htmlFor="userRole" className="block mb-2">
+              <label htmlFor="userRole" className="block mb-2 text-black">
                 Selecione o tipo de usuário:
               </label>
               <select
                 id="userRole"
                 value={userRole}
                 onChange={handleUserRoleChange}
-                className="w-full p-2 mb-2 border border-gray-300 rounded"
+                className="w-full p-2 mb-2 border border-gray-300 rounded text-black"
               >
                 <option value={UserRole.Doctor}>Doutor</option>
                 <option value={UserRole.Patient}>Paciente</option>
@@ -90,6 +88,5 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }

@@ -1,0 +1,29 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+export function middleware(request: NextRequest) {
+    const protectedPaths = ['/', '/dashboard', '/profile', '/settings']; // Include '/' in protected paths
+    const { pathname } = request.nextUrl;
+
+    // Verify the presence of the "session" cookie
+    const hasSessionCookie = request.cookies.get('session');
+
+    // Redirect unauthenticated users to the login page if they try to access protected paths
+    if (protectedPaths.some(path => pathname.startsWith(path))) {
+        if (!hasSessionCookie) {
+            const loginUrl = new URL('/login', request.url);
+            return NextResponse.redirect(loginUrl);
+        }
+    }
+
+    // Redirect authenticated users away from the login page
+    if ((pathname === '/login' || pathname === '/register') && hasSessionCookie) {
+        const homeUrl = new URL('/', request.url); // Redirect to home or dashboard
+        return NextResponse.redirect(homeUrl);
+    }
+
+    return NextResponse.next(); // Allow access if authenticated
+}
+
+export const config = {
+    matcher: ['/', '/dashboard/:path*', '/profile/:path*', '/settings/:path*', '/login'], // Include '/login' in matcher
+};
