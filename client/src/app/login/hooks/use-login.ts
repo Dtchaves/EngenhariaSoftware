@@ -26,13 +26,11 @@ export function useLogin() {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      console.log("credentials: ", credentials);
       const response = await axios.post(
         `${apiUrl}/api/login`,
         credentials,
         { withCredentials: true }
       );
-      console.log("response: ", response);
       setUser(response.data.user);
       router.push("/");
     } catch (error) {

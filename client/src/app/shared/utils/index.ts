@@ -48,3 +48,14 @@ export interface RegisterCredentials {
   doctor_id?: number;
   role: UserRole;
 }
+
+export const DoctorOptions = [
+  { label: "My Profile", href: "/doctor/my_profile" },
+  { label: "Patients", href: "/doctor/patients" },
+];
+
+export const PatientOptions = [
+  { label: "My Profile", href: "/patient/my_profile" },
+  { label: "Doctors", href: "/patient/doctors" },
+  { label: "Upload ECG", href: "/patient/upload_ecg" },
+];

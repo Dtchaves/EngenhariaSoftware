@@ -1,7 +1,8 @@
 // app/layout.js
+"use client";
 import "./globals.css";
-import TopBar from "./shared/components/TopBar";
 import { Tomorrow } from "next/font/google";
+import TopBar from "./shared/components/TopBar";
 
 const tomorrow = Tomorrow({
   variable: "--font-tomorrow",

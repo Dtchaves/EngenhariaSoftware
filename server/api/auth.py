@@ -74,7 +74,7 @@ def login():
 
     if user and user.check_password(data['password']):
         login_user(user)
-        session['user_id'] = user.id
+        session['role'] = user.role
         return make_response(jsonify({'message': f'Welcome {user.name}', 'role': str(user.role)}), SUCCESS_CODE)
 
     return jsonify({'message': INVALID_CREDENTIALS_MESSAGE}), UNAUTHORIZED_CODE
