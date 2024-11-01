@@ -23,11 +23,11 @@ export enum UserRole {
 export const UserColor = {
   Doctor: {
     bg: "bg-blue-500",
-    button: "text-blue-800",
+    text: "text-blue-800",
   },
   Patient: {
     bg: "bg-red-500",
-    button: "text-red-800",
+    text: "text-red-800",
   },
 };
 

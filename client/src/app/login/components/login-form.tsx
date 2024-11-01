@@ -17,7 +17,6 @@ export const LoginForm = ({ onSubmit, initialData, buttonText, bgColor }: LoginF
     setUserData(initialData);
   }, [initialData]);
   
-  console.log(userData, initialData);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -25,17 +24,35 @@ export const LoginForm = ({ onSubmit, initialData, buttonText, bgColor }: LoginF
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // setUserData({ ...userData, role: initialData.role });
-    console.log(userData);
     onSubmit(userData);
   };
 
   return (
     <form onSubmit={handleSubmit} className={`p-4 ${bgColor} rounded shadow`}>
-      <FormInput placeholder="Email" name="email" value={userData.email} onChange={handleChange} />
-      {(initialData.crm != undefined) && <FormInput placeholder="CRM" name="crm" value={userData.crm} onChange={handleChange} />}
-      <FormInput placeholder="Password" name="password" value={userData.password} onChange={handleChange} />
-      <button type="submit" className={`w-full p-2 text-white ${bgColor} rounded hover:bg-green-600`}>{buttonText}</button>
+      <FormInput
+        placeholder="Email"
+        name="email"
+        value={userData.email}
+        onChange={handleChange}
+        className={userData.email ? 'font-bold' : ''}
+      />
+      {initialData.crm !== undefined && (
+        <FormInput
+          placeholder="CRM"
+          name="crm"
+          value={userData.crm}
+          onChange={handleChange}
+          className={userData.crm ? 'font-bold' : ''}
+        />
+      )}
+      <FormInput
+        placeholder="Password"
+        name="password"
+        value={userData.password}
+        onChange={handleChange}
+        className={userData.password ? 'font-bold' : ''}
+      />
+      <button type="submit" className={`w-full p-2 text-white ${bgColor} border border-solid rounded`}>{buttonText}</button>
     </form>
   );
 };

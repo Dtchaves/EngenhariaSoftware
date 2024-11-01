@@ -13,7 +13,7 @@ class Config:
     MODEL_PATH = os.getenv("MODEL_PATH")
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     PORT = int(os.getenv('PORT', 4000))
-    SESSION_COOKIE_NAME="session",         # Default name used by Flask
-    SESSION_COOKIE_HTTPONLY=True,          # Prevents JavaScript access to the cookie
-    SESSION_COOKIE_SECURE=True,            # Only send cookie over HTTPS
-    SESSION_COOKIE_SAMESITE="Lax",         # Restricts cookie on cross-site requests
+    SESSION_COOKIE_NAME='session'        # Default name used by Flask
+    SESSION_COOKIE_HTTPONLY=True         # Prevents JavaScript access to the cookie
+    SESSION_COOKIE_SECURE=True          # Only send cookie over HTTPS
+    SESSION_COOKIE_SAMESITE=None        # Restricts cookie on cross-site requests

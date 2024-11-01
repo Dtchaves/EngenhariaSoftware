@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 export function useLogin() {
   const [user, setUser] = useState<Doctor | Patient | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   // useEffect(() => {
@@ -28,13 +29,18 @@ export function useLogin() {
       console.log("credentials: ", credentials);
       const response = await axios.post(
         `${apiUrl}/api/login`,
-        credentials
+        credentials,
+        { withCredentials: true }
       );
+      console.log("response: ", response);
       setUser(response.data.user);
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
+      setError("Login failed. Please try again.");
     }
+
+    console.log("response: ");
   };
 
   const logout = async () => {
@@ -43,11 +49,14 @@ export function useLogin() {
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
+      setError("Logout failed. Please try again.");
     }
   };
 
   return {
     user,
+    error,
+    setError,
     login,
     logout,
     isAuthenticated: !!user,

@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, make_response, request, jsonify, session
+from flask_cors import cross_origin
 from flask_login import login_user, logout_user, login_required, current_user
 from api.models import db, Doctor, Patient, Admin
 from api.constants import UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVALID_CREDENTIALS_MESSAGE
@@ -58,6 +59,7 @@ def check_authentication():
 
 # Login for patients, doctors, and admins
 @auth.route('/login', methods=['POST'])
+@cross_origin(methods=['POST'], supports_credentials=True)
 def login():
     data = request.json
     user = None
@@ -72,7 +74,8 @@ def login():
 
     if user and user.check_password(data['password']):
         login_user(user)
-        return jsonify({'message': f'Welcome {user.name}', 'role': str(user.role)}), SUCCESS_CODE
+        session['user_id'] = user.id
+        return make_response(jsonify({'message': f'Welcome {user.name}', 'role': str(user.role)}), SUCCESS_CODE)
 
     return jsonify({'message': INVALID_CREDENTIALS_MESSAGE}), UNAUTHORIZED_CODE
 

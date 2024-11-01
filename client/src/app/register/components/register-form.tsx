@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { RegisterCredentials, UserRole } from '@/app/shared/utils';
 import FormInput from '@/app/shared/components/FormInput';
 
@@ -12,7 +11,7 @@ interface RegisterFormProps {
 
 export const RegisterForm = ({ onSubmit, initialData, buttonText, bgColor }: RegisterFormProps) => {
   const [userData, setUserData] = useState<RegisterCredentials>(initialData);
-  // console.log(userData);
+
   useEffect(() => {
     setUserData(initialData);
   }, [initialData]);
@@ -30,23 +29,65 @@ export const RegisterForm = ({ onSubmit, initialData, buttonText, bgColor }: Reg
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`p-4 bg-${bgColor}-100 rounded shadow`}>
-      <FormInput name="name" placeholder="Name" value={userData.name} onChange={handleChange} />
-      <FormInput name="email" placeholder="Email" value={userData.email} onChange={handleChange} />
-      <FormInput name="password" placeholder="Password" value={userData.password} onChange={handleChange} />
+    <form onSubmit={handleSubmit} className={`p-4 ${bgColor} rounded shadow`}>
+      <FormInput
+        name="name"
+        placeholder="Name"
+        value={userData.name}
+        onChange={handleChange}
+        className={userData.name ? 'font-bold' : ''}
+      />
+      <FormInput
+        name="email"
+        placeholder="Email"
+        value={userData.email}
+        onChange={handleChange}
+        className={userData.email ? 'font-bold' : ''}
+      />
+      <FormInput
+        name="password"
+        placeholder="Password"
+        value={userData.password}
+        onChange={handleChange}
+        className={userData.password ? 'font-bold' : ''}
+      />
       {initialData.role === UserRole.Doctor && (
         <>
-          <FormInput name="crm" placeholder="CRM" value={userData.crm} onChange={handleChange} />
-          <FormInput name="specialization" placeholder="Specialization" value={userData.specialization} onChange={handleChange} />
+          <FormInput
+            name="crm"
+            placeholder="CRM"
+            value={userData.crm}
+            onChange={handleChange}
+            className={userData.crm ? 'font-bold' : ''}
+          />
+          <FormInput
+            name="specialization"
+            placeholder="Specialization"
+            value={userData.specialization}
+            onChange={handleChange}
+            className={userData.specialization ? 'font-bold' : ''}
+          />
         </>
       )}
       {initialData.role === UserRole.Patient && (
         <>
-          <FormInput name="age" placeholder="Age" value={userData.age?.toString()} onChange={handleChange} />
-          <FormInput name="doctor_id" placeholder="Doctor ID" value={userData.doctor_id?.toString()} onChange={handleChange} />
+          <FormInput
+            name="age"
+            placeholder="Age"
+            value={userData.age?.toString()}
+            onChange={handleChange}
+            className={userData.age ? 'font-bold' : ''}
+          />
+          <FormInput
+            name="doctor_id"
+            placeholder="Doctor ID"
+            value={userData.doctor_id?.toString()}
+            onChange={handleChange}
+            className={userData.doctor_id ? 'font-bold' : ''}
+          />
         </>
       )}
-      <button type="submit" className={`w-full p-2 text-white bg-${bgColor}-500 rounded hover:bg-green-600`}>{buttonText}</button>
+      <button type="submit" className={`w-full p-2 text-white ${bgColor} border border-solid rounded`}>{buttonText}</button>
     </form>
   );
 };
