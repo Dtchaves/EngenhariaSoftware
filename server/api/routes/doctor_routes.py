@@ -90,3 +90,17 @@ def view_patient_exams(doctor_id, patient_id):
         return make_response(jsonify([exam.result for exam in exams]), SUCCESS_CODE)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
+    
+# Get all exams from all patients
+@routes.route('/doctors/<int:doctor_id>/exams', methods=['GET'])
+@login_required
+def get_all_exams(doctor_id):
+    try:
+        if current_user.role != 'doctor':
+            return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
+
+        exams = ExamResult.query.filter_by(doctor_id=doctor_id).all()
+        exams_with_patients = [{'patient_id': exam.patient_id, 'result': exam.result} for exam in exams]
+        return make_response(jsonify(exams_with_patients), SUCCESS_CODE)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
