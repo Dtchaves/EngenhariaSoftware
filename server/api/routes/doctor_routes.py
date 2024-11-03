@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from api.schemas import doctor_schema, doctors_schema
-from api.models import db, Doctor, UserRole
+from api.models import ExamResult, db, Doctor, UserRole
+from api.constants import SERVER_ERROR_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVALID_CREDENTIALS_MESSAGE
 
 routes = Blueprint('doctor_routes', __name__)
 
@@ -76,3 +77,16 @@ def delete_doctor(id):
         return make_response(jsonify({'message': 'Doctor deleted successfully'}), 200)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
+    
+# View exam results for a patient (Doctor)
+@routes.route('/doctors/<int:doctor_id>/patient/<int:patient_id>/exams', methods=['GET'])
+@login_required
+def view_patient_exams(doctor_id, patient_id):
+    try:
+        if current_user.role != 'doctor' or current_user.id != doctor_id:
+            return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
+
+        exams = ExamResult.query.filter_by(doctor_id=doctor_id, patient_id=patient_id).all()
+        return make_response(jsonify([exam.result for exam in exams]), SUCCESS_CODE)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)

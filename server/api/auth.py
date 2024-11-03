@@ -55,7 +55,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/check', methods=['GET'])
 @login_required
 def check_authentication():
-    return jsonify({'authenticated': True, 'user': {'name': current_user.name, 'role': current_user.role}}), SUCCESS_CODE
+    return jsonify({'authenticated': True, 'user': {'name': current_user.name, 'role': str(current_user.role)}}), SUCCESS_CODE
 
 # Login for patients, doctors, and admins
 @auth.route('/login', methods=['POST'])
@@ -73,10 +73,13 @@ def login():
         user = Admin.query.filter_by(email=data['email']).first()
 
     if user and user.check_password(data['password']):
-        login_user(user)
-        session['role'] = user.role
-        return make_response(jsonify({'message': f'Welcome {user.name}', 'role': str(user.role)}), SUCCESS_CODE)
-
+        login_user(user, remember=True)
+        response = make_response(jsonify({
+            'message': f'Welcome {user.name}',
+            'role': str(user_role)
+        }))
+        return response, SUCCESS_CODE
+        
     return jsonify({'message': INVALID_CREDENTIALS_MESSAGE}), UNAUTHORIZED_CODE
 
 # Admin login (if separate from user login)
@@ -91,7 +94,10 @@ def login_admin():
 
 # Logout route
 @auth.route('/logout', methods=['GET'])
+@cross_origin(origins="http://localhost:3000", methods=['GET'], supports_credentials=True)
 @login_required
 def logout():
+    print(current_user)
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), SUCCESS_CODE
+

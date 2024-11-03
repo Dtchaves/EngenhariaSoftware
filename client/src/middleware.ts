@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const protectedPaths = ['/dashboard', '/profile', '/settings']; // Include '/' in protected paths
+    const protectedPaths = ['/medico', '/paciente', 'configuracoes']; // Include '/' in protected paths
     const { pathname } = request.nextUrl;
     console.log("pathname: ", pathname);
 
@@ -19,7 +19,7 @@ export function middleware(request: NextRequest) {
 
     // Redirect authenticated users away from the login page
     if ((pathname === '/login' || pathname === '/register') && hasSessionCookie) {
-        console.log("Redirecting to home or dashboard");
+        console.log("Redirecting to home");
         const homeUrl = new URL('/', request.url); // Redirect to home or dashboard
         return NextResponse.redirect(homeUrl);
     }
@@ -28,5 +28,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/', '/dashboard/:path*', '/profile/:path*', '/settings/:path*', '/login', '/register'], // Include '/login' in matcher
+    matcher: ['/', '/medico/:path*', '/paciente/:path*', '/configuracoes/:path*', '/login', '/register'], // Include '/login' in matcher
 };

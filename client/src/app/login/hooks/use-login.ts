@@ -31,14 +31,13 @@ export function useLogin() {
         credentials,
         { withCredentials: true }
       );
+      console.log("response: ", response.data);
       setUser(response.data.user);
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
       setError("Login failed. Please try again.");
     }
-
-    console.log("response: ");
   };
 
   const logout = async () => {

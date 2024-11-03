@@ -1,7 +1,12 @@
-import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  PowerIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import Link from "next/link";
 import { DoctorOptions } from "../utils";
+import { logout } from "../hooks/logout";
 
 const Sidebar = () => {
   // State to manage the open/close state of the sidebar
@@ -24,6 +29,14 @@ const Sidebar = () => {
               </Link>
             </div>
           ))}
+          <div className="mt-4">
+            <button
+              className="text-white hover:text-gray-300"
+              onClick={() => logout()}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
       <div
