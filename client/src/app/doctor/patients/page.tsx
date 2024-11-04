@@ -1,5 +1,5 @@
+"use client"
 // app/medico/patients/page.tsx
-"use client";
 
 import PatientTable from "../components/PatientTable";
 

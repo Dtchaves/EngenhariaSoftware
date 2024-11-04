@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, session
 from flask_login import login_user, logout_user, login_required, current_user
 from api.schemas import doctor_schema, doctors_schema
 from api.models import ExamResult, db, Doctor, UserRole
@@ -92,14 +92,15 @@ def view_patient_exams(doctor_id, patient_id):
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
     
 # Get all exams from all patients
-@routes.route('/doctors/<int:doctor_id>/exams', methods=['GET'])
-@login_required
-def get_all_exams(doctor_id):
+@routes.route('/doctors/patients', methods=['GET'])
+def get_all_exams():
+    print(session)
+    print(current_user.name)
     try:
         if current_user.role != 'doctor':
             return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
 
-        exams = ExamResult.query.filter_by(doctor_id=doctor_id).all()
+        exams =  db.session.query(ExamResult, Patient).join(Patient, ExamResult.patient_id == Patient.id).filter(ExamResult.doctor_id == current_user.id).all()
         exams_with_patients = [{'patient_id': exam.patient_id, 'result': exam.result} for exam in exams]
         return make_response(jsonify(exams_with_patients), SUCCESS_CODE)
     except Exception as e:

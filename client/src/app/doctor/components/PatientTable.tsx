@@ -1,4 +1,5 @@
 // app/medico/components/PatientTable.tsx
+'use client';
 import React from "react";
 import Link from "next/link";
 import { usePatientData } from "../hooks/usePacientData";

@@ -1,11 +1,12 @@
-// app/medico/components/MyProfile.tsx
+// app/doctor/components/DoctorProfile.tsx
 import React from "react";
 import { useDoctorData } from "../hooks/useDoctorData";
 
-const MyProfile = () => {
-  const { data, loading } = useDoctorData();
+const DoctorProfile = () => {
+  const { data, loading, error } = useDoctorData();
 
   if (loading) return <p>Carregando...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md">
@@ -18,4 +19,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default DoctorProfile;
