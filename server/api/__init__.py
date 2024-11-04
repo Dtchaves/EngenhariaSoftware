@@ -9,9 +9,6 @@ def create_app(model_path=None):
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    if model_path:
-        app.config['MODEL_PATH'] = model_path
-
     db.init_app(app)
     login_manager.init_app(app)
 
@@ -25,11 +22,12 @@ def create_app(model_path=None):
     app.register_blueprint(message_routes.routes, url_prefix='/api')
     app.register_blueprint(report_routes.routes, url_prefix='/api')
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        return Admin.query.get(user_id) or Doctor.query.get(user_id) or Patient.query.get(user_id)
+    
     with app.app_context():
         db.create_all()
 
     return app
 
-@login_manager.user_loader
-def load_user(user_id):
-    return Admin.query.get(user_id) or Doctor.query.get(user_id) or Patient.query.get(user_id)

@@ -1,12 +1,23 @@
-from flask import Blueprint, request, jsonify, make_response
+import os
+from flask import Blueprint, Config, request, jsonify, make_response
 from flask_login import login_user, logout_user, login_required, current_user
+import numpy as np
+import torch
 from api.schemas import patient_schema, patients_schema
-from api.models import db, Patient
+from api.models import ExamResult, UserRole, db, Patient
+from api.utils import allowed_file, load_model, make_prediction, save_file
+from PIL import Image
+from dotenv import load_dotenv
+
+dotenv_path = os.path.join(os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), '.env')
+load_dotenv(dotenv_path)
 
 routes = Blueprint('patient_routes', __name__)
+model = load_model(os.getenv('MODEL_PATH'))
+# model = load_model('/home/rafaelmg/Documents/EngenhariaSoftware/server/models/MoEGateC.pt')
 
 # Create a new patient
-@routes.route('/patients', methods=['POST'])
+@routes.route('/patient', methods=['POST'])
 def create_patient():
     try:
         name = request.json['name']
@@ -34,7 +45,7 @@ def get_patients():
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Get a specific patient by ID
-@routes.route('/patients/<id>', methods=['GET'])
+@routes.route('/patient/<id>', methods=['GET'])
 @login_required
 def get_patient(id):
     try:
@@ -46,7 +57,7 @@ def get_patient(id):
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Update a patient
-@routes.route('/patients/<id>', methods=['PUT'])
+@routes.route('/patient/<id>', methods=['PUT'])
 def update_patient(id):
     try:
         patient = Patient.query.get(id)
@@ -64,7 +75,7 @@ def update_patient(id):
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Delete a patient
-@routes.route('/patients/<id>', methods=['DELETE'])
+@routes.route('/patient/<id>', methods=['DELETE'])
 def delete_patient(id):
     try:
         patient = Patient.query.get(id)
@@ -77,34 +88,34 @@ def delete_patient(id):
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
     
-# @routes.route('/patients/<int:patient_id>/upload_exam', methods=['POST'])
-# @login_required
-# def upload_exam(patient_id):
-#     try:
-#         if current_user.role != UserRole.PATIENT:
-#             return make_response(jsonify({'message': 'Only patients can upload exams'}), 403)
+@routes.route('/temp_route', methods=['POST'])
+@login_required
+def upload_exam(patient_id):
+    try:
+        if current_user.role != UserRole.PATIENT:
+            return make_response(jsonify({'message': 'Only patients can upload exams'}), 403)
 
-#         file = request.files.get('file')
-#         if not file or not allowed_file(file.filename, Config.ALLOWED_EXTENSIONS):
-#             return make_response(jsonify({'message': 'File not found or invalid file type'}), 400)
+        file = request.files.get('file')
+        if not file or not allowed_file(file.filename, Config.ALLOWED_EXTENSIONS):
+            return make_response(jsonify({'message': 'File not found or invalid file type'}), 400)
 
-#         filepath = save_file(file, Config.UPLOAD_FOLDER)
+        filepath = save_file(file, Config.UPLOAD_FOLDER)
         
-#         img = Image.open(filepath)
-#         img_tensor = torch.from_numpy(np.array(img)).float().unsqueeze(0)
-#         result = make_prediction(model, img_tensor)
+        img = Image.open(filepath)
+        img_tensor = torch.from_numpy(np.array(img)).float().unsqueeze(0)
+        result = make_prediction(model, img_tensor)
 
-#         result_data = {'result': result.item()}
+        result_data = {'result': result.item()}
         
-#         # Query the patient object
-#         patient = Patient.query.get(patient_id)
-#         if not patient:
-#             return make_response(jsonify({'message': 'Patient not found'}), 404)
+        # Query the patient object
+        patient = Patient.query.get(patient_id)
+        if not patient:
+            return make_response(jsonify({'message': 'Patient not found'}), 404)
         
-#         exam_result = ExamResult(patient_id=patient_id, doctor_id=patient.doctor.id, result=result_data)
-#         db.session.add(exam_result)
-#         db.session.commit()
+        exam_result = ExamResult(patient_id=patient_id, doctor_id=patient.doctor.id, result=result_data)
+        db.session.add(exam_result)
+        db.session.commit()
 
-#         return make_response(jsonify({'message': 'File uploaded successfully', 'result': result_data}), 200)
-#     except Exception as e:
-#         return make_response(jsonify({'message': str(e)}), 500)
+        return make_response(jsonify({'message': 'File uploaded successfully', 'result': result_data}), 200)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), 500)

@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import axios from "axios";
 import { apiUrl } from "@/app/shared/constants";
 import { redirect } from "next/navigation";
@@ -9,6 +9,7 @@ export async function logout() {
   } catch (error) {
     console.error("Logout failed. Please try again.", error);
   } finally {
+    console.log('agora, ir pro login');
     redirect("/login");
   }
 }
