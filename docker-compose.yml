@@ -10,21 +10,21 @@ services:
   #   depends_on:
   #     - flaskapp
 
-  flaskapp:
-    build:
-      context: ./server
-      dockerfile: flask.dockerfile
-    container_name: flaskapp
-    image: flaskapp:1.0.0
-    restart: always
-    ports:
-      - "4000:4000"
-    env_file:
-      - .env
-    volumes:
-      - ./server:/app
-    depends_on:
-      - db
+  # flaskapp:
+  #   build:
+  #     context: ./server
+  #     dockerfile: flask.dockerfile
+  #   container_name: flaskapp
+  #   image: flaskapp:1.0.0
+  #   restart: always
+  #   ports:
+  #     - "4000:4000"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./server:/app
+  #   depends_on:
+  #     - db
 
   db:
     container_name: db
