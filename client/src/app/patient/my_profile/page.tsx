@@ -8,7 +8,7 @@ export default function PatientProfilePage() {
     <div className="flex h-screen">
       <div className="flex-1 flex flex-col">
         <main className="p-6">
-          <PatientProfilePage />
+          <PatientProfile/>
         </main>
       </div>
     </div>
