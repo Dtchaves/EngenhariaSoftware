@@ -21,7 +21,7 @@ const TopBar = () => {
         />
       </div>
       <div className="flex items-center">
-        <Image
+      <Image
           src="/logos/logo-ufmg.png"
           alt="Logo 1"
           width={60}
