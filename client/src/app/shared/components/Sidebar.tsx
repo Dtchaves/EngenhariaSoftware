@@ -1,3 +1,5 @@
+'use client';
+
 import {
   ArrowRightIcon,
   PowerIcon,
@@ -32,7 +34,7 @@ const Sidebar = () => {
           <div className="mt-4">
             <button
               className="text-white hover:text-gray-300"
-              onClick={() => logout()}
+              onClick={logout}
             >
               Logout
             </button>

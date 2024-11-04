@@ -1,3 +1,5 @@
+import FileUploader from "./shared/components/ECGUpload";
+
 export default async function Page() {
   // const rowData = [
   //   { name: "lala", role: "Doctor", email: "blabla@teste.com" },
@@ -9,6 +11,7 @@ export default async function Page() {
         <p className="text-blue-500 text-lg">Usuário autenticado!</p>
       </div>
       {/* <Table rowData={rowData} /> */}
+      <FileUploader />
     </div>
   );
 }

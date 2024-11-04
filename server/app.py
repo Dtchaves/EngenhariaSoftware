@@ -4,7 +4,8 @@ from api import create_app
 
 app = create_app()
 
-CORS(app, origins="http://localhost:3000", supports_credentials=True, resources={r"/*": {"origins": "*"}})
+CORS(app, supports_credentials=True)
+
 users = {
     "user": "password"  
 }

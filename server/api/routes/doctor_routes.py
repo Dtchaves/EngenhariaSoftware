@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from api.schemas import doctor_schema, doctors_schema
-from api.models import ExamResult, db, Doctor, UserRole
+from api.models import ExamResult, Patient, db, Doctor, UserRole
 from api.constants import SERVER_ERROR_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVALID_CREDENTIALS_MESSAGE
 
 routes = Blueprint('doctor_routes', __name__)
 
 # Create a new doctor
-@routes.route('/doctors', methods=['POST'])
+@routes.route('/doctor', methods=['POST'])
 def create_doctor():
     try:
         print(request.json)
@@ -37,7 +37,7 @@ def get_doctors():
         return make_response(jsonify({'message': str(e)}), 400)
 
 # Get a specific doctor by ID
-@routes.route('/doctors/<id>', methods=['GET'])
+@routes.route('/doctor/<id>', methods=['GET'])
 def get_doctor(id):
     try:
         doctor = Doctor.query.get(id)
@@ -48,7 +48,7 @@ def get_doctor(id):
         return make_response(jsonify({'message': str(e)}), 400)
 
 # Update a doctor
-@routes.route('/doctors/<id>', methods=['PUT'])
+@routes.route('/doctor/<id>', methods=['PUT'])
 def update_doctor(id):
     try:
         doctor = Doctor.query.get(id)
@@ -65,7 +65,7 @@ def update_doctor(id):
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Delete a doctor
-@routes.route('/doctors/<id>', methods=['DELETE'])
+@routes.route('/doctor/<id>', methods=['DELETE'])
 def delete_doctor(id):
     try:
         doctor = Doctor.query.get(id)
@@ -79,7 +79,7 @@ def delete_doctor(id):
         return make_response(jsonify({'message': str(e)}), 500)
     
 # View exam results for a patient (Doctor)
-@routes.route('/doctors/<int:doctor_id>/patient/<int:patient_id>/exams', methods=['GET'])
+@routes.route('/doctor/<int:doctor_id>/patient/<int:patient_id>/exams', methods=['GET'])
 @login_required
 def view_patient_exams(doctor_id, patient_id):
     try:
@@ -92,15 +92,15 @@ def view_patient_exams(doctor_id, patient_id):
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
     
 # Get all exams from all patients
-@routes.route('/doctors/<int:doctor_id>/exams', methods=['GET'])
+@routes.route('/doctor/patients', methods=['GET'])
 @login_required
-def get_all_exams(doctor_id):
+def get_all_exams():
     try:
         if current_user.role != 'doctor':
             return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
 
-        exams = ExamResult.query.filter_by(doctor_id=doctor_id).all()
-        exams_with_patients = [{'patient_id': exam.patient_id, 'result': exam.result} for exam in exams]
+        exams = db.session.query(ExamResult, Patient).join(Patient, ExamResult.patient_id == Patient.id).filter(ExamResult.doctor_id == current_user.id).all()
+        exams_with_patients = [{'patient_id': exam.ExamResult.patient_id, 'patient_name': exam.Patient.name, 'result': exam.ExamResult.result} for exam in exams]
         return make_response(jsonify(exams_with_patients), SUCCESS_CODE)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)

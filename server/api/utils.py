@@ -1,4 +1,5 @@
 import os
+import torch
 from werkzeug.utils import secure_filename
 
 def save_file(file, upload_folder):
@@ -17,9 +18,7 @@ def allowed_file(filename, allowed_extensions):
 
 def load_model(model_path):
     """Loads the PyTorch model for inference"""
-    import torch
-    model = torch.load(model_path)
-    model.eval()
+    model = torch.load(model_path, map_location=torch.device('cpu'))
     return model
 
 def make_prediction(model, image_tensor):
