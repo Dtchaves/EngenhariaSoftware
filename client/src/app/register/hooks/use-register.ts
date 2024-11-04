@@ -18,8 +18,8 @@ export function useRegister() {
       const role = credentials.role;
       console.log("credentials: ", credentials);
       const suffixes: Record<string, string> = {
-        Doctor: "doctors",
-        Patient: "patients",
+        Doctor: "doctor",
+        Patient: "patient",
       };
 
       if (!suffixes[role]) {
