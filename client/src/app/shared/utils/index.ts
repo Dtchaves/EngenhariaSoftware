@@ -50,6 +50,7 @@ export interface RegisterCredentials {
 }
 
 export const DoctorOptions = [
+  { label: "Home", href: "/doctor" },
   { label: "My Profile", href: "/doctor/my_profile" },
   { label: "Patients", href: "/doctor/patients" },
 ];

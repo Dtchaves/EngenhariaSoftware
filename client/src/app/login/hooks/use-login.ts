@@ -33,7 +33,8 @@ export function useLogin() {
       );
       console.log("response: ", response.data);
       setUser(response.data.user);
-      router.push("/");
+      const role = credentials.role as string == "Doctor" ? "medico" : "patient";
+      router.push(`/${role}`);  
     } catch (error) {
       console.error("Login failed:", error);
       setError("Login failed. Please try again.");
