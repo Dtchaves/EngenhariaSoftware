@@ -51,12 +51,33 @@ export interface RegisterCredentials {
 
 export const DoctorOptions = [
   { label: "Home", href: "/doctor" },
-  { label: "My Profile", href: "/doctor/my_profile" },
+  { label: "My Profile", href: "/doctor/profile" },
   { label: "Patients", href: "/doctor/patients" },
 ];
 
 export const PatientOptions = [
-  { label: "My Profile", href: "/patient/my_profile" },
+  { label: "My Profile", href: "/patient/profile" },
   { label: "Doctors", href: "/patient/doctors" },
   { label: "Upload ECG", href: "/patient/upload_ecg" },
 ];
+
+export interface DoctorData {
+  id: number;
+  name: string;
+  specialization: string;
+  crm: string;
+  email: string;
+}
+
+export interface PatientData {
+  id: number;
+  name: string;
+  age: number;
+  email: string;
+}
+
+export interface EditDoctorData {
+  name: string;
+  specialization: string;
+  email: string;
+}

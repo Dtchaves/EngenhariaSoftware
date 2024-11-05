@@ -2,7 +2,7 @@
 'use client';
 import React from "react";
 import Link from "next/link";
-import { usePatientData } from "../hooks/usePacientData";
+import { usePatientData } from "../hooks/usePatientData";
 
 const PatientTable = () => {
   const { data, loading } = usePatientData();
@@ -24,8 +24,8 @@ const PatientTable = () => {
             <td className="py-2 px-4">
               <Link href={`/medico/patients/${patient.id}`}>{patient.name}</Link>
             </td>
-            <td className="py-2 px-4">{patient.age}</td>
-            <td className="py-2 px-4">{patient.lastVisit}</td>
+            {/* <td className="py-2 px-4">{patient.age}</td>
+            <td className="py-2 px-4">{patient.lastVisit}</td> */}
           </tr>
         ))}
       </tbody>

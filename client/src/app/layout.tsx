@@ -7,7 +7,7 @@ import TopBar from "./shared/components/TopBar";
 const tomorrow = Tomorrow({
   variable: "--font-tomorrow",
   display: "swap",
-  weight: ["100", "900"],
+  weight: ["400", "900"],
   subsets: ["latin"],
 });
 

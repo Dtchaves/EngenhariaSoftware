@@ -36,11 +36,11 @@ def get_doctors():
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 400)
 
-# Get a specific doctor by ID
-@routes.route('/doctor/<id>', methods=['GET'])
-def get_doctor(id):
+@routes.route('/doctor/profile', methods=['GET'])
+@login_required
+def get_doctor():
     try:
-        doctor = Doctor.query.get(id)
+        doctor = Doctor.query.get(current_user.id)
         if doctor:
             return make_response(doctor_schema.jsonify(doctor), 200)
         return make_response(jsonify({'message': 'Doctor not found'}), 404)
@@ -48,10 +48,11 @@ def get_doctor(id):
         return make_response(jsonify({'message': str(e)}), 400)
 
 # Update a doctor
-@routes.route('/doctor/<id>', methods=['PUT'])
-def update_doctor(id):
+@routes.route('/doctor/profile', methods=['PUT'])
+@login_required
+def update_doctor():
     try:
-        doctor = Doctor.query.get(id)
+        doctor = Doctor.query.get(current_user.id)
         if not doctor:
             return make_response(jsonify({'message': 'Doctor not found'}), 404)
 
@@ -96,11 +97,18 @@ def view_patient_exams(doctor_id, patient_id):
 @login_required
 def get_all_exams():
     try:
-        if current_user.role != 'doctor':
+        if current_user.role != UserRole.DOCTOR:
             return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
 
+        patients = Patient.query.all()
         exams = db.session.query(ExamResult, Patient).join(Patient, ExamResult.patient_id == Patient.id).filter(ExamResult.doctor_id == current_user.id).all()
-        exams_with_patients = [{'patient_id': exam.ExamResult.patient_id, 'patient_name': exam.Patient.name, 'result': exam.ExamResult.result} for exam in exams]
-        return make_response(jsonify(exams_with_patients), SUCCESS_CODE)
+
+        exams_with_patients = {patient.id: {'patient_id': patient.id, 'patient_name': patient.name, 'results': []} for patient in patients}
+        
+        for exam in exams:
+            exams_with_patients[exam.Patient.id]['results'].append(exam.ExamResult.result)
+
+        exams_with_patients_list = list(exams_with_patients.values())
+        return make_response(jsonify(exams_with_patients_list), SUCCESS_CODE)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)

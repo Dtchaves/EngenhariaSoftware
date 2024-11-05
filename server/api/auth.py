@@ -55,7 +55,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/check', methods=['GET'])
 @login_required
 def check_authentication():
-    return jsonify({'authenticated': True, 'user': {'id': current_user.id, 'name': current_user.name, 'role': str(current_user.role)}}), SUCCESS_CODE
+    return jsonify({'authenticated': True, 'user': {'id': current_user.id, 'name': current_user.name, 'role': str(current_user.role.value)}}), SUCCESS_CODE
 
 # Login for patients, doctors, and admins
 @auth.route('/login', methods=['POST'])

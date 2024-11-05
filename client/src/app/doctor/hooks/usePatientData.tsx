@@ -7,8 +7,7 @@ import { useState, useEffect } from "react";
 interface Patient {
   id: string;
   name: string;
-  age: number;
-  lastVisit: string;
+  // exam: ...
 }
 
 export const usePatientData = () => {
@@ -18,8 +17,19 @@ export const usePatientData = () => {
   const fetchPatients = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${apiUrl}/api/doctors/patients`, { withCredentials: true}); // Substitua pela rota real da API
+      const response = await axios.get(`${apiUrl}/api/doctor/patients`, { withCredentials: true}); // Substitua pela rota real da API
       const patients = await response.data;
+      // Now, every patient has an id, a name and an array of exams. We are going to transform that so that each element of the array correspond to a exam.
+      // patients = patients.map((patient: any) => {
+      //   return {
+      //     id: patient.id,
+      //     name: patient.name,
+      //     exams: patient.exams.map((exam: any) => {
+      //       return {
+      //         id: exam.id,
+      //         name: exam.name,
+      //         result: exam.result,
+      //       };
       console.log("patients: ", patients);
       setData(patients);
     } catch (error) {

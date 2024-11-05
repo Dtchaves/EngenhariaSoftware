@@ -4,7 +4,7 @@
 // import GeneralInfo from "./components/generalInfo";
 // import DoctorProfile from "./components/doctorProfile";
 
-export default function DoctorPage() {
+export default function PatientPage() {
   // const [view, setView] = useState<"general" | "profile">("general");
 
   return (

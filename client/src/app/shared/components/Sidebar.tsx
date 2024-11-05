@@ -6,12 +6,17 @@ import {
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import Link from "next/link";
-import { DoctorOptions } from "../utils";
+import { DoctorOptions, PatientOptions } from "../utils";
 import { logout } from "../hooks/logout";
+import { useAuthentication } from "../hooks/use-authentication";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const menu = DoctorOptions;
+  const { user, loading, error } = useAuthentication();
+  const menu = user?.role === "doctor" ? DoctorOptions : PatientOptions;
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="flex">

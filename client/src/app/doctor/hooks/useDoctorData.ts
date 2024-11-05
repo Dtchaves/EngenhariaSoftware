@@ -1,14 +1,9 @@
 // app/doctor/hooks/useDoctorData.ts
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { apiUrl } from "@/app/shared/constants";
-
-interface DoctorData {
-  name: string;
-  email: string;
-  specialty: string;
-  crm: string;
-}
+import { DoctorData } from "@/app/shared/utils";
 
 export const useDoctorData = () => {
   const [data, setData] = useState<DoctorData | null>(null);
@@ -18,10 +13,12 @@ export const useDoctorData = () => {
   useEffect(() => {
     const fetchDoctorData = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/check`, {
-          withCredentials: true, // Garante que cookies de autenticação sejam enviados
+        const response = await axios.get<DoctorData>(`${apiUrl}/api/doctor/profile`, {
+          withCredentials: true,
         });
-        setData(response.data); // Assegure-se de que a resposta da API está no formato esperado
+        console.log("response: ", response.data);
+        setData(response.data);
+        console.log("data: ", data);
       } catch (err) {
         console.error("Erro ao buscar dados do médico:", err);
         setError("Erro ao buscar dados do médico");
@@ -33,5 +30,5 @@ export const useDoctorData = () => {
     fetchDoctorData();
   }, []);
 
-  return { data, loading, error };
+  return { data, loading, error, setError };
 };
