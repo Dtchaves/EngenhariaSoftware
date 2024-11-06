@@ -8,7 +8,7 @@ const TopBar = () => {
   const showSidebar = pathname !== "/login" && pathname !== "/register";
 
   return (
-    <div className="bg-blue-900 flex justify-between items-center p-2 text-white h-20">
+    <div className="bg-gray-900 flex justify-between items-center p-2 text-white h-20">
       <div className="flex items-center">
         {showSidebar && <Sidebar />}
         <span className="text-2xl font-bold mr-5 ml-10">ECG SYSTEM</span>
