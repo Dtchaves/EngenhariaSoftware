@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify, make_response, session
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_required, current_user
 from api.schemas import doctor_schema, doctors_schema
 from api.models import ExamResult, Patient, db, Doctor, UserRole
 from api.constants import SERVER_ERROR_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVALID_CREDENTIALS_MESSAGE
+from api.auth import logout
 
 routes = Blueprint('doctor_routes', __name__)
 
@@ -65,14 +66,16 @@ def update_doctor():
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
 
-# Delete a doctor
-@routes.route('/doctor/<id>', methods=['DELETE'])
-def delete_doctor(id):
+# Delete doctor that is currently logged in
+@routes.route('/doctor/profile', methods=['DELETE'])
+@login_required
+def delete_current_doctor():
     try:
-        doctor = Doctor.query.get(id)
+        doctor = Doctor.query.get(current_user.id)
         if not doctor:
             return make_response(jsonify({'message': 'Doctor not found'}), 404)
 
+        logout()
         db.session.delete(doctor)
         db.session.commit()
         return make_response(jsonify({'message': 'Doctor deleted successfully'}), 200)

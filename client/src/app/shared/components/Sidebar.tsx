@@ -8,20 +8,18 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { DoctorOptions, PatientOptions } from "../utils";
 import { logout } from "../hooks/logout";
-import { useAuthentication } from "../hooks/use-authentication";
 
-const Sidebar = () => {
+export default function Sidebar ({ userRole }: { userRole: string}) {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading, error } = useAuthentication();
-  const menu = user?.role === "doctor" ? DoctorOptions : PatientOptions;
-
-  if (loading) return <p>Carregando...</p>;
-  if (error) return <p>{error}</p>;
+  const menu = userRole === "doctor" ? DoctorOptions : PatientOptions;
+  const color = userRole === "doctor" ? "bg-blue-900" : "bg-red-900";
+  // if (loading) return <p>Carregando...</p>;
+  // if (error) return <p>{error}</p>;
 
   return (
     <div className="flex">
       <div
-        className={`bg-blue-900 text-white 
+        className={`${color} text-white 
                     fixed h-screen transition-all 
                     duration-300 z-10 
                     ${isOpen ? "w-64" : "w-0 overflow-hidden"}`}
@@ -50,8 +48,8 @@ const Sidebar = () => {
       >
         <div className="ml-auto">
           <button
-            className="bg-blue-900 hover:bg-blue-700 
-                       text-white font-bold py-2 px-4 rounded"
+            className={`${color}
+                       text-white font-bold py-2 px-4 rounded`}
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? (
@@ -65,5 +63,3 @@ const Sidebar = () => {
     </div>
   );
 };
-
-export default Sidebar;

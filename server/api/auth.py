@@ -94,8 +94,8 @@ def login_admin():
     return jsonify({'message': INVALID_CREDENTIALS_MESSAGE}), UNAUTHORIZED_CODE
 
 # Logout route
-@auth.route('/logout', methods=['GET'])
-@cross_origin(origins="http://localhost:3000", methods=['GET'], supports_credentials=True)
+@auth.route('/logout', methods=['POST'])
+@cross_origin(methods=['POST'], supports_credentials=True)
 @login_required
 def logout():
     print(current_user)

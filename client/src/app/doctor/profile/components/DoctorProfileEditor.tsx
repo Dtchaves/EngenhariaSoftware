@@ -2,7 +2,7 @@
 import React from "react";
 import FormInput from "@/app/shared/components/FormInput";
 import { EditDoctorData } from "@/app/shared/utils";
-import useEditDoctor from "../hooks/useEditDoctor";
+import useEditDoctorProfile from "../hooks/useEditDoctorProfile";
 
 interface DoctorProfileEditorProps {
   initialData: EditDoctorData;
@@ -26,10 +26,12 @@ export default function DoctorProfileEditor({ initialData, onCancel, setIsEditin
     }));
   };
 
+  const editDoctorProfile = useEditDoctorProfile();
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     setIsEditing(false);
-    useEditDoctor(formData, setError);
+    editDoctorProfile(formData, setError);
   };
 
 

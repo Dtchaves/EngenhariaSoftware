@@ -1,16 +1,22 @@
+// "use client";
 import React from "react";
 import Image from "next/image";
 import Sidebar from "./Sidebar";
-import { usePathname } from "next/navigation";
+import { useAuthentication } from "../hooks/use-authentication";
 
-const TopBar = () => {
-  const pathname = usePathname();
-  const showSidebar = pathname !== "/login" && pathname !== "/register";
+interface TopBarProps {
+  showSidebar: boolean;
+  userRole: string;
+}
+
+export default async function TopBar( { showSidebar, userRole }: TopBarProps) {
+  // const showSidebar = user !== null;
+  const color = userRole === "doctor" ? "bg-blue-900" : "bg-red-900";
 
   return (
-    <div className="bg-blue-900 flex justify-between items-center p-2 text-white h-20">
+    <div className={`${color} flex justify-between items-center p-2 text-white h-20`}>
       <div className="flex items-center">
-        {showSidebar && <Sidebar />}
+        {showSidebar && <Sidebar userRole={userRole ?? ""}/>}
         <span className="text-2xl font-bold mr-5 ml-10">ECG SYSTEM</span>
         <Image
           src="/logos/Interactive.png"
@@ -32,5 +38,3 @@ const TopBar = () => {
     </div>
   );
 };
-
-export default TopBar;

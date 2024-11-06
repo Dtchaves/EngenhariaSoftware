@@ -5,7 +5,7 @@ import axios from "axios";
 import { apiUrl } from "@/app/shared/constants";
 import { DoctorData } from "@/app/shared/utils";
 
-export const useDoctorData = () => {
+export const useDoctorProfile = () => {
   const [data, setData] = useState<DoctorData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

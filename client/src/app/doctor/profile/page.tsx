@@ -1,7 +1,7 @@
 "use client";
 // app/medico/my_profile/page.tsx
 
-import DoctorProfile from "../components/DoctorProfile";
+import DoctorProfile from "./components/DoctorProfile";
 
 export default function DoctorProfilePage() {
   return (

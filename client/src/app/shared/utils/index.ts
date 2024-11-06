@@ -81,3 +81,9 @@ export interface EditDoctorData {
   specialization: string;
   email: string;
 }
+
+export interface EditPatientData {
+  name: string;
+  age: number;
+  email: string;
+}

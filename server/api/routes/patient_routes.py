@@ -8,6 +8,7 @@ from api.models import ExamResult, UserRole, db, Patient
 from api.utils import allowed_file, load_model, make_prediction, save_file
 from PIL import Image
 from api.config import Config
+from api.auth import logout
 
 routes = Blueprint('patient_routes', __name__)
 model = load_model(Config.MODEL_PATH)
@@ -42,11 +43,11 @@ def get_patients():
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Get a specific patient by ID
-@routes.route('/patient/<id>', methods=['GET'])
+@routes.route('/patient/profile', methods=['GET'])
 @login_required
-def get_patient(id):
+def get_patient():
     try:
-        patient = Patient.query.get(id)
+        patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
         return make_response(patient_schema.jsonify(patient), 200)
@@ -54,17 +55,17 @@ def get_patient(id):
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Update a patient
-@routes.route('/patient/<id>', methods=['PUT'])
-def update_patient(id):
+@routes.route('/patient/profile', methods=['PUT'])
+@login_required
+def update_patient():
     try:
-        patient = Patient.query.get(id)
+        patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
 
         patient.name = request.json['name']
         patient.age = request.json['age']
         patient.email = request.json['email']
-        patient.doctor_id = request.json['doctor_id']
 
         db.session.commit()
         return make_response(patient_schema.jsonify(patient), 200)
@@ -72,13 +73,15 @@ def update_patient(id):
         return make_response(jsonify({'message': str(e)}), 500)
 
 # Delete a patient
-@routes.route('/patient/<id>', methods=['DELETE'])
-def delete_patient(id):
+@routes.route('/patient/profile', methods=['DELETE'])
+@login_required
+def delete_current_patient():
     try:
-        patient = Patient.query.get(id)
+        patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
 
+        logout()
         db.session.delete(patient)
         db.session.commit()
         return make_response(jsonify({'message': 'Patient deleted successfully'}), 200)

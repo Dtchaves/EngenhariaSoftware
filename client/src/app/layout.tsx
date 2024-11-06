@@ -1,8 +1,8 @@
 // app/layout.js
-"use client";
 import "./globals.css";
 import { Tomorrow } from "next/font/google";
 import TopBar from "./shared/components/TopBar";
+import { useAuthentication } from "./shared/hooks/use-authentication";
 
 const tomorrow = Tomorrow({
   variable: "--font-tomorrow",
@@ -11,15 +11,19 @@ const tomorrow = Tomorrow({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await useAuthentication();
+  const showSidebar = user !== null;
+  const userRole = user?.role;
+
   return (
     <html lang="en" className={tomorrow.className}>
       <body className="antialiased min-h-screen">
-        <TopBar />
+        <TopBar showSidebar={showSidebar} userRole={userRole ?? ""} />
         <main>{children}</main>
       </body>
     </html>
