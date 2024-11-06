@@ -9,6 +9,8 @@ from api.utils import allowed_file, load_model, make_prediction, save_file
 from PIL import Image
 from api.config import Config
 from api.auth import logout
+from matplotlib import pyplot as plt
+from seaborn import sns
 
 routes = Blueprint('patient_routes', __name__)
 model = load_model(Config.MODEL_PATH)
@@ -88,6 +90,52 @@ def delete_current_patient():
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
     
+def plotar_ecg_unico(dados, plot_path, segmentos=None, largura_figura=12, cor_linha='black'):
+    print("")
+    fig, ax = plt.subplots(figsize=(largura_figura, 2.5))  # Ajusta a altura da figura para uma única dimensão
+    
+    sns.set(style="whitegrid")  # Define um estilo de grade branca
+    
+    # Plotagem dos dados
+    tempo = np.arange(len(dados)) / 1000  # Ajusta o eixo x para segundos
+    
+    # Plotagem dos dados
+    sns.lineplot(x=tempo, y=dados, ax=ax, color=cor_linha, linewidth=2)
+    ax.set_ylabel('Amplitude', fontsize=12)
+    
+    # Configura os ticks menores para capturar as ondas com mais detalhes
+    ax.xaxis.set_major_locator(plt.MaxNLocator(20))  # Máximo de 20 ticks no eixo X
+    ax.xaxis.set_minor_locator(plt.MaxNLocator(100))  # Máximo de 100 ticks menores no eixo X
+    ax.yaxis.set_major_locator(plt.MaxNLocator(10))  # Máximo de 10 ticks no eixo Y
+    ax.yaxis.set_minor_locator(plt.MaxNLocator(50))  # Máximo de 50 ticks menores no eixo Y
+    
+    ax.grid(True, which='both', linestyle='--', alpha=0.7)  # Adiciona grade principal e secundária
+    
+    # Melhorar a legibilidade do eixo x e y
+    ax.tick_params(axis='x', rotation=45)
+    ax.tick_params(axis='y', labelsize=12)
+    
+    # Adiciona um rótulo comum para o eixo X na parte inferior da figura
+    ax.set_xlabel('Tempo em segundos', fontsize=12)
+
+    # Adiciona segmentos, se fornecidos
+    if segmentos is not None:
+        # Mapeia cada segmento a uma cor suave
+        cores_segmentos = {
+                1: (0.2, 0.4, 0.8, 0.3),  # Azul mais forte
+                2: (0.5, 0.8, 0.5, 0.3),  # Verde mais forte
+                3: (1, 0.2, 0.2, 0.3)     # Vermelho mais forte
+            } # Laranja suave
+        for i in range(len(dados) - 1):
+            if segmentos[i] in cores_segmentos:
+                ax.axvspan(tempo[i], tempo[i + 1], color=cores_segmentos[segmentos[i]])
+
+    plt.tight_layout(rect=[0, 0.05, 1, 0.98])  # Ajusta o layout para evitar sobreposição
+    print(plot_path)
+    plt.savefig(plot_path, dpi=300)
+    plt.show()
+    plt.close()
+    
 @routes.route('/temp_route', methods=['POST'])
 @login_required
 def upload_exam(patient_id):
@@ -100,10 +148,15 @@ def upload_exam(patient_id):
             return make_response(jsonify({'message': 'File not found or invalid file type'}), 400)
 
         filepath = save_file(file, Config.UPLOAD_FOLDER)
+        file_np_array = np.loadtxt(filepath)
         
-        img = Image.open(filepath)
-        img_tensor = torch.from_numpy(np.array(img)).float().unsqueeze(0)
+        img_tensor = torch.from_numpy(file_np_array).float().unsqueeze(0)
+        img_tensor = img_tensor.view(1, 12, -1) 
+        
         result = make_prediction(model, img_tensor)
+        
+        plotar_ecg_unico(file_np_array, 'plot.png')
+        image = Image.open('plot.png')
 
         result_data = {'result': result.item()}
         
@@ -112,7 +165,7 @@ def upload_exam(patient_id):
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
         
-        exam_result = ExamResult(patient_id=patient_id, doctor_id=patient.doctor.id, result=result_data)
+        exam_result = ExamResult(patient_id=patient_id, doctor_id=patient.doctor.id, result={})
         db.session.add(exam_result)
         db.session.commit()
 

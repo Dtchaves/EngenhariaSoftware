@@ -18,3 +18,5 @@ requests
 werkzeug
 debugpy
 python-dotenv
+matplotlib
+seaborn

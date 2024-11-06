@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <UserFormLayout
       title="Login"
-      description="Login to use the system"
+      description="Faça login para usar o sistema"
       userRole={userRole}
       handleUserRoleChange={handleUserRoleChange}
       linkHref="/register"
