@@ -18,8 +18,8 @@ def allowed_file(filename, allowed_extensions):
 
 def load_model(model_path):
     """Loads the PyTorch model for inference"""
-    model = torch.load(model_path, map_location=torch.device('cpu'))
-    return model
+    #model = torch.load(model_path, map_location=torch.device('cpu'))
+    return None
 
 def make_prediction(model, image_tensor):
     """Runs the prediction on an image tensor using the model"""
