@@ -93,6 +93,8 @@ Essas tecnologias juntas fornecerão a base para um sistema completo, modular e 
 No diretório raiz do projeto, execute o seguinte comando para compilar a imagem e iniciar o banco de dados:
 
 ```bash
+sudo apt update
+sudo apt install postgresql-client
 docker-compose up --build -d db
 ```
 
@@ -107,48 +109,6 @@ source venv/bin/activate  # No Windows, use venv\Scripts\activate
 
 ### 3. Instale as Dependências do Backend
 Ainda no diretório server, instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Claro, aqui está o código formatado corretamente em Markdown para o arquivo 
-
-README.md
-
-:
-
-```markdown
-# Execução do Projeto
-
-## Pré-requisitos
-- Docker e Docker Compose instalados
-- Python 3.12 ou superior
-- Virtualenv para gerenciamento de ambiente virtual
-- VSCode (opcional, para depuração com debugger)
-
-## Passo a Passo para Primeira Execução
-
-### 1. Inicialize o Banco de Dados com Docker
-No diretório raiz do projeto, execute o seguinte comando para compilar a imagem e iniciar o banco de dados:
-
-```bash
-sudo apt update
-sudo apt install postgresql-client
-docker-compose up --build -d db
-```
-
-### 2. Configure o Ambiente Virtual para o Backend
-No diretório `server`, crie e ative um ambiente virtual:
-
-```bash
-cd server
-python3 -m venv venv
-source venv/bin/activate  # No Windows, use venv\Scripts\activate
-```
-
-### 3. Instale as Dependências do Backend
-Ainda no diretório `server`, instale as dependências:
 
 ```bash
 pip install -r requirements.txt
