@@ -23,8 +23,8 @@ export default function UserFormLayout({
   color,
 }: UserFormLayoutProps){
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center flex flex-col gap-3">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="bg-white p-4 rounded-lg shadow-lg text-center flex flex-col gap-3">
         <h1 className={`text-3xl font-bold ${color.text}`}>{title}</h1>
         <p>{description}</p>
         <div className="w-full max-w-md mx-auto">

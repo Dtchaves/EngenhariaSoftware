@@ -37,29 +37,40 @@ export default function Login() {
   const interfaceName = `${userRole}-interface`;
 
   return (
-    <UserFormLayout
-      title="Login"
-      description="Login to use the system"
-      userRole={userRole}
-      handleUserRoleChange={handleUserRoleChange}
-      linkHref="/register"
-      linkText="Não tem uma conta? Registre-se"
-      color={color} // Pass the color class
-    >
-      {error && (
-        <div className="bg-red-500 text-white p-4 text-center">{error}</div>
-      )}
+    <div className="relative min-h-screen flex items-center justify-center">
+      {/* Background image with blur */}
       <div
-        className={`${interfaceName} w-full max-w-md p-4 my-4 rounded shadow ${color.bg}`}
+        className="absolute inset-0 bg-cover bg-center filter blur-lg"
+        style={{
+          backgroundImage: "url('image.jpg')", // Path to your background image
+          zIndex: -1,
+        }}
+      ></div>
+
+      <UserFormLayout
+        title="Login"
+        description="Login to use the system"
+        userRole={userRole}
+        handleUserRoleChange={handleUserRoleChange}
+        linkHref="/register"
+        linkText="Não tem uma conta? Registre-se"
+        color={color}
       >
-        <h2 className="text-xl font-bold text-center text-white mb-6">Login</h2>
-        <LoginForm
-          onSubmit={login}
-          buttonText="Login"
-          initialData={initialData}
-          bgColor={color.bg}
-        />
-      </div>
-    </UserFormLayout>
+        {error && (
+          <div className="bg-red-500 text-white p-4 text-center">{error}</div>
+        )}
+        <div
+          className={`${interfaceName} w-full max-w-md p-4 my-4 rounded shadow ${color.bg}`}
+        >
+          <h2 className="text-xl font-bold text-center text-white mb-6">Login</h2>
+          <LoginForm
+            onSubmit={login}
+            buttonText="Login"
+            initialData={initialData}
+            bgColor={color.bg}
+          />
+        </div>
+      </UserFormLayout>
+    </div>
   );
 }
