@@ -1,6 +1,7 @@
 // app/medico/patients/[patientID]/[examID]/page.tsx
 import { useRouter } from "next/router";
 import ExamDetail from "../../../components/ExamDetails";
+import SendExamResult from "../../../components/SendExamResult";
 
 const ExamDetailPage = () => {
   const router = useRouter();
@@ -10,6 +11,7 @@ const ExamDetailPage = () => {
     <div>
       <h1>Detalhes do Exame</h1>
       <ExamDetail patientId={patientID as string} examId={examID as string} />
+      <SendExamResult patientId={patientID as string} examId={examID as string} doctorEmail="doctor@example.com" />
     </div>
   );
 };
