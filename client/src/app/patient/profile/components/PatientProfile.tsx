@@ -1,6 +1,6 @@
 // app/paciente/components/MyProfile.tsx
 
-import { getPatientProfile } from "../hooks/getPatientProfile";
+import { getPatientProfile } from "../hooks/get-patient-profile";
 import ActionButtons from "./ActionButtons";
 
 export default async function PatientProfile() {

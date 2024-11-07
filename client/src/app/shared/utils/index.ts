@@ -87,3 +87,16 @@ export interface EditPatientData {
   age: number;
   email: string;
 }
+
+export interface PatientsExamsRowData {
+  id: number;
+  name: string;
+  age: number;
+  email: string;
+};
+
+export interface PatientExamsTableRowData {
+  id: number;
+  name: string;
+  date: string;
+};

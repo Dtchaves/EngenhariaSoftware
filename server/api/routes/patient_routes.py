@@ -1,3 +1,4 @@
+import base64
 import os
 from flask import Blueprint, request, jsonify, make_response
 from flask_login import login_user, logout_user, login_required, current_user
@@ -10,7 +11,7 @@ from PIL import Image
 from api.config import Config
 from api.auth import logout
 from matplotlib import pyplot as plt
-from seaborn import sns
+import seaborn as sns
 
 routes = Blueprint('patient_routes', __name__)
 model = load_model(Config.MODEL_PATH)
@@ -90,7 +91,7 @@ def delete_current_patient():
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
     
-def plotar_ecg_unico(dados, plot_path, segmentos=None, largura_figura=12, cor_linha='black'):
+def plotar_ecg_unico(dados, plot_path, segmentos=None, largura_figura=12, cor_linha='red'):
     print("")
     fig, ax = plt.subplots(figsize=(largura_figura, 2.5))  # Ajusta a altura da figura para uma única dimensão
     
@@ -136,39 +137,43 @@ def plotar_ecg_unico(dados, plot_path, segmentos=None, largura_figura=12, cor_li
     plt.show()
     plt.close()
     
-@routes.route('/temp_route', methods=['POST'])
+@routes.route('/patient/upload_ecg', methods=['POST'])
 @login_required
-def upload_exam(patient_id):
+def upload_exam():
     try:
         if current_user.role != UserRole.PATIENT:
             return make_response(jsonify({'message': 'Only patients can upload exams'}), 403)
 
         file = request.files.get('file')
+        name = request.form.get('name')
         if not file or not allowed_file(file.filename, Config.ALLOWED_EXTENSIONS):
             return make_response(jsonify({'message': 'File not found or invalid file type'}), 400)
 
-        filepath = save_file(file, Config.UPLOAD_FOLDER)
-        file_np_array = np.loadtxt(filepath)
+        filepath = save_file(file, Config.UPLOAD_FOLDER, name)
+        file_np_array = np.loadtxt(filepath, delimiter=",")
         
         img_tensor = torch.from_numpy(file_np_array).float().unsqueeze(0)
         img_tensor = img_tensor.view(1, 12, -1) 
         
         result = make_prediction(model, img_tensor)
+        result_dict = {f'd{i+1}': result[i].item() for i in range(6)}
         
-        plotar_ecg_unico(file_np_array, 'plot.png')
-        image = Image.open('plot.png')
+        plotar_ecg_unico(torch.from_numpy(file_np_array).flatten(), 'plot.png')
+        
+        with open('plot.png', "rb") as img_file:
+            encoded_img = base64.b64encode(img_file.read()).decode('utf-8')
 
-        result_data = {'result': result.item()}
+        result_data = {'image': encoded_img }
         
         # Query the patient object
-        patient = Patient.query.get(patient_id)
+        patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
         
-        exam_result = ExamResult(patient_id=patient_id, doctor_id=patient.doctor.id, result={})
+        exam_result = ExamResult(patient_id=current_user.id, doctor_id=patient.doctor.id, exam_name=name, result=result_dict)
         db.session.add(exam_result)
         db.session.commit()
 
-        return make_response(jsonify({'message': 'File uploaded successfully', 'result': result_data}), 200)
+        return make_response(jsonify({'message': 'File uploaded successfully', 'image': encoded_img}), 200)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)

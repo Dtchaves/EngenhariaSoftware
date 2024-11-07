@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from api.models import db, Patient, Doctor, Admin
 from api.config import Config
 
@@ -11,6 +12,7 @@ def create_app(model_path=None):
 
     db.init_app(app)
     login_manager.init_app(app)
+    migrate = Migrate(app, db)
 
     from api.auth import auth
     app.register_blueprint(auth, url_prefix='/api')

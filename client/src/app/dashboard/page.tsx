@@ -1,5 +1,3 @@
-import Table from "../shared/components/Table";
-
 export default async function Page() {
   // const rowData = [
   //   { name: "lala", role: "Doctor", email: "blabla@teste.com" },

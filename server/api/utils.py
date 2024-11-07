@@ -2,13 +2,12 @@ import os
 import torch
 from werkzeug.utils import secure_filename
 
-def save_file(file, upload_folder):
+def save_file(file, upload_folder, name: str):
     """Saves a file and returns the saved filepath"""
     if not file:
         return None
 
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(upload_folder, filename)
+    filepath = os.path.join(upload_folder, f"{name}.csv")
     file.save(filepath)
     return filepath
 
@@ -22,7 +21,18 @@ def load_model(model_path):
     return model
 
 def make_prediction(model, image_tensor):
+    array = [1e-05, 1e-05, 1e-05, 1e-05, 1e-05, 1e-05]
+
     """Runs the prediction on an image tensor using the model"""
     with torch.no_grad():
         output = model(image_tensor)
-        return output
+        probs = torch.sigmoid(output)
+
+        binary_results = torch.zeros_like(probs)
+        for i in range(len(array)):
+            binary_results[:, i] = (
+                probs[:, i] >= array[i]
+            ).float()
+            
+        print(binary_results)
+        return binary_results.detach().numpy().flatten()

@@ -8,6 +8,7 @@ psycopg2-binary
 flask_login
 flask_bcrypt
 flask_marshmallow
+flask_script
 marshmallow-sqlalchemy
 torch
 torchvision

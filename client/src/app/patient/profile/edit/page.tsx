@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import FormInput from "@/app/shared/components/FormInput";
 import { EditPatientData } from "@/app/shared/utils";
-import { editPatientProfile } from "../hooks/editPatientProfile";
+import { editPatientProfile } from "../hooks/edit-patient-profile";
 import { redirect } from "next/navigation";
-import { getPatientProfile } from "../hooks/getPatientProfile";
+import { getPatientProfile } from "../hooks/get-patient-profile";
 
 export default function PatientProfileEditor() {
   //   const getPatientProfile = useGetPatientProfile();
