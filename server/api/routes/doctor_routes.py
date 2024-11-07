@@ -137,3 +137,29 @@ def send_exam_result(patient_id, exam_id):
         return make_response(jsonify({'message': 'Result sent successfully'}), SUCCESS_CODE)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
+
+#Rota para pegar todos os pacientes de um médico
+@routes.route('/doctor/patients', methods=['GET'])
+@login_required
+def get_patients():
+    try:
+        if current_user.role != 'doctor':
+            return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
+        
+        patients = Patient.query.filter_by(doctor_id=current_user.id).all()
+        return make_response(jsonify(patients_schema.dump(patients)), SUCCESS_CODE)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
+
+#Rota para pegar todos os exames de um paciente
+@routes.route('/doctor/patient/<int:patient_id>/exams', methods=['GET'])
+@login_required
+def get_patient_exams(patient_id):
+    try:
+        if current_user.role != 'doctor':
+            return make_response(jsonify({'message': 'Unauthorized access'}), UNAUTHORIZED_CODE)
+        
+        exams = ExamResult.query.filter_by(patient_id=patient_id, doctor_id=current_user.id).all()
+        return make_response(jsonify([exam.result for exam in exams]), SUCCESS_CODE)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), SERVER_ERROR_CODE)
