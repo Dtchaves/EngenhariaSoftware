@@ -10,7 +10,7 @@ from PIL import Image
 from api.config import Config
 from api.auth import logout
 from matplotlib import pyplot as plt
-from seaborn import sns
+import seaborn as sns
 
 routes = Blueprint('patient_routes', __name__)
 model = load_model(Config.MODEL_PATH)
