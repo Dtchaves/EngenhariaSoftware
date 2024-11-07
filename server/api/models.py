@@ -67,6 +67,7 @@ class ExamResult(db.Model):
     result = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    doctor_email = db.Column(db.String(100), nullable=False)
 
 class Message(db.Model):
     __tablename__ = 'messages'
