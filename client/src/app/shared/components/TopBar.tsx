@@ -21,7 +21,7 @@ export default async function TopBar({ showSidebar, userRole }: TopBarProps) {
 >>>>>>> Stashed changes
 
   return (
-    <div className="bg-blue-900 flex justify-between items-center p-2 text-white h-20">
+    <div className="bg-gray-900 flex justify-between items-center p-2 text-white h-20">
       <div className="flex items-center">
 <<<<<<< Updated upstream
         {showSidebar && <Sidebar />}

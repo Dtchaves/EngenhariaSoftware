@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, Config, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 import numpy as np
 import torch
@@ -7,13 +7,10 @@ from api.schemas import patient_schema, patients_schema
 from api.models import ExamResult, UserRole, db, Patient
 from api.utils import allowed_file, load_model, make_prediction, save_file
 from PIL import Image
-from dotenv import load_dotenv
-
-dotenv_path = os.path.join(os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), '.env')
-load_dotenv(dotenv_path)
+from api.config import Config
 
 routes = Blueprint('patient_routes', __name__)
-model = load_model(os.getenv('MODEL_PATH'))
+model = load_model(Config.MODEL_PATH)
 # model = load_model('/home/rafaelmg/Documents/EngenhariaSoftware/server/models/MoEGateC.pt')
 
 # Create a new patient
