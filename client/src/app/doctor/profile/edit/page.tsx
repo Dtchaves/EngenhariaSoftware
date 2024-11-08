@@ -1,14 +1,10 @@
-import { editPatientProfile } from "../hooks/edit-patient-profile";
-import { getPatientProfile } from "../../../shared/hooks/get-patient-profile";
+import { getDoctorProfile } from "@/app/shared/hooks/get-doctor-profile";
 import { EditProfileForm } from "@/app/shared/components/EditProfileForm";
-
-const initialState = {
-  message: "",
-};
+import { editDoctorProfile } from "../hooks/edit-doctor-profile";
 
 export default async function EditPatientPage() {
   //   const getPatientProfile = useGetPatientProfile();
-  const data = await getPatientProfile();
+  const data = await getDoctorProfile();
   if ('message' in data) {
     return <div>{data.message}</div>;
   }
@@ -51,8 +47,8 @@ export default async function EditPatientPage() {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-3 bg-white p-8 rounded-lg shadow-md max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Perfil do Paciente</h2>
-        <EditProfileForm initialData={data} userRole="patient" onSubmit={editPatientProfile} />
+        <h2 className="text-2xl font-bold mb-4">Perfil do Médico</h2>
+        <EditProfileForm initialData={data} userRole="doctor" onSubmit={editDoctorProfile} />
       </div>
     </div>
   );

@@ -1,18 +1,27 @@
 "use client";
 import Link from "next/link";
-import { deletePatientProfile } from "../hooks/delete-patient-profile";
+import { deleteProfile } from "../hooks/delete-profile";
+import { startTransition, useActionState } from "react";
 
-export default function ActionButtons() {
+interface ActionButtonsProps {
+  userRole: "patient" | "doctor";
+}
+
+export default function ActionButtons({ userRole }: ActionButtonsProps) {
+  const [state, formAction] = useActionState(deleteProfile, { message: "" });
+
   const handleDeleteClick = () => {
     if (window.confirm("Tem certeza que deseja deletar seu perfil?")) {
-      deletePatientProfile();
+      startTransition(() => {
+        formAction(userRole);
+      });
     }
   };
 
   return (
     <div className="flex gap-2">
       <Link
-        href="/patient/profile/edit"
+        href={`/${userRole}/profile/edit`}
         className="bg-green-500 text-white p-2 rounded"
       >
         Editar

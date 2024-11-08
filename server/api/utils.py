@@ -24,11 +24,12 @@ def make_prediction(model, image_tensor, plot_path):
 
     """Runs the prediction on an image tensor using the model"""
     import matplotlib.pyplot as plt
-    
+    model.eval()
     logits = model(image_tensor)
+    print(logits)
     
     probabilities = torch.sigmoid(logits)
-
+    print(probabilities)
     diseases = ["1dAVb", "RBBB ", "LBBB", "SB", "AF ", "ST"]
 
     thresholds = [0.24, 0.47, 0.14, 0.22, 0.31, 0.15]

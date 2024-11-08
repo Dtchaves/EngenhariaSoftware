@@ -39,13 +39,13 @@ export default async function ExamDetailPage({
           )}
           {exam.ecg_image_base64 && (
             <div className="my-3 flex justify-center">
-              <img
-                src={`data:image/png;base64,${exam.ecg_image_base64}`}
-                alt={`ECG ${exam.exam_name}`}
-                className="rounded-md object-contain"
-                style={{ maxHeight: "400px", maxWidth: "100%" }}
-              />
-            </div>
+            <img
+              src={`data:image/png;base64,${data.ecg_image_base64}`}
+              alt={`ECG ${data.exam_name}`}
+              className="rounded-md object-contain"
+              style={{ maxHeight: "500px", maxWidth: "100%" }} // Aumentado para 500px
+            />
+          </div>
           )}
         </div>
       </div>

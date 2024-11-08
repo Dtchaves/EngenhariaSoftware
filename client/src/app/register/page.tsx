@@ -5,8 +5,14 @@ import { UserColor, UserRole } from "../shared/utils";
 import { useRegister } from "./hooks/use-register";
 import { RegisterForm } from "./components/register-form";
 import UserFormLayout from "../shared/components/UserFormLayout";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
+  useEffect(() => {
+    router.refresh();
+  }, []);
+  
   const { register, error, setError } = useRegister();
 
   const [userRole, setUserRole] = useState<UserRole>(UserRole.Doctor);

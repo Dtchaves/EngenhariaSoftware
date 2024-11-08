@@ -4,14 +4,16 @@ from flask import Blueprint, current_app, request, jsonify, make_response, send_
 from flask_login import login_user, logout_user, login_required, current_user
 import numpy as np
 import torch
-from api.schemas import patient_schema, patients_schema
-from api.models import Doctor, ExamResult, UserRole, db, Patient
+from api.schemas import patient_schema, patients_schema, doctor_schema
+from api.models import Doctor, ExamResult, MedicalReport, UserRole, db, Patient
 from api.utils import allowed_file, load_model, make_prediction, save_file
 from PIL import Image
 from api.config import Config
 from api.auth import logout
 from matplotlib import pyplot as plt
 import seaborn as sns
+from api.constants import BAD_REQUEST_CODE, FORBIDDEN_CODE, SUCCESS_CODE
+
 
 routes = Blueprint('patient_routes', __name__)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -87,6 +89,15 @@ def delete_current_patient():
         patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
+        
+        # Delete medical report and exam results that belong to the patient
+        exam_results = ExamResult.query.filter_by(patient_id=current_user.id).all()
+        for exam in exam_results:
+            db.session.delete(exam)
+            
+        medical_reports = MedicalReport.query.filter_by(patient_id=current_user.id).all()
+        for report in medical_reports:
+            db.session.delete(report)
 
         logout()
         db.session.delete(patient)
@@ -94,6 +105,18 @@ def delete_current_patient():
         return make_response(jsonify({'message': 'Patient deleted successfully'}), 200)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
+    
+@routes.route('/patient/doctor', methods=['GET'])
+@login_required
+def get_doctor():
+    try:
+        if current_user.role != UserRole.PATIENT:
+            return make_response(jsonify({'message': 'Acesso não autorizado'}), FORBIDDEN_CODE)
+        
+        doctor = Doctor.query.get(current_user.doctor_id)
+        return make_response(jsonify(doctor_schema.dump(doctor)), SUCCESS_CODE)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), BAD_REQUEST_CODE)
     
 def plotar_ecg_unico(dados, plot_path, segmentos=None, largura_figura=12, cor_linha='red'):
     print("")
@@ -159,6 +182,7 @@ def upload_exam():
         img_tensor = torch.from_numpy(file_np_array).float().unsqueeze(0)
         if img_tensor.shape[1] > img_tensor.shape[2]:
             img_tensor = img_tensor.permute(0, 2, 1).to(device) 
+        print(img_tensor)
         
         result_dict = make_prediction(model, img_tensor, f'{model_images_path}/{name}_model_plot.png')
         

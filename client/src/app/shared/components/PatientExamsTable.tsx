@@ -12,12 +12,14 @@ export default function PatientExamsTable({
   context,
 }: PatientExamsTableProps) {
   const lastColumn = context === "doctor" ? "Paciente" : "Médico";
+  const bgColor = context === "doctor" ? "bg-blue-600" : "bg-red-600";
+  const linkColor = context === "doctor" ? "text-blue-500" : "text-red-500";
   return (
     <div className="p-6 flex flex-col items-center">
       <h1 className="text-3xl font-semibold mb-6">Exames</h1>
       <table className="items-center min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
-          <tr className="bg-red-600 text-white uppercase text-sm leading-normal">
+          <tr className={`${bgColor} text-white uppercase text-sm leading-normal`}>
             <th className="py-3 px-6 text-left">Nome do exame</th>
             <th className="py-3 px-6 text-left">Data</th>
             <th className="py-3 px-6 text-left">{lastColumn}</th>
@@ -38,7 +40,7 @@ export default function PatientExamsTable({
                         }/${exam.id}`
                       : `/patient/exams/${exam.id}`
                   }
-                  className="text-red-500 hover:underline"
+                  className={`${linkColor} hover:underline`}
                 >
                   {exam.exam_name}
                 </Link>

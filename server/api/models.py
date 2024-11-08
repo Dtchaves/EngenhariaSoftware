@@ -70,6 +70,19 @@ class ExamResult(db.Model):
     ecg_image_path = db.Column(db.String(255), nullable=True)
     model_result_image_path = db.Column(db.String(255), nullable=True)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'patient_id': self.patient_id,
+            'doctor_id': self.doctor_id,
+            'exam_name': self.exam_name,
+            'doctor_feedback': self.doctor_feedback,
+            'result': self.result,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+            'ecg_image_path': self.ecg_image_path,
+            'model_result_image_path': self.model_result_image_path,
+        }
 class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)

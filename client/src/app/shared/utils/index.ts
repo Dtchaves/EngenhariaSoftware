@@ -62,32 +62,24 @@ export const PatientOptions = [
   { label: "Fazer upload de ECG", href: "/patient/upload_ecg" },
 ];
 
-export interface DoctorData {
+export interface UserData {
   id: number;
   name: string;
+  email: string;
+}
+
+export interface DoctorData extends UserData {
   specialization: string;
   crm: string;
-  email: string;
 }
 
-export interface PatientDataResponse {
-  id: number;
-  name: string;
+export interface PatientData extends UserData {
   age: number;
-  email: string;
 }
 
-export interface EditDoctorData {
-  name: string;
-  specialization: string;
-  email: string;
-}
+export type EditDoctorData = Partial<Omit<DoctorData, "id">>;
 
-export interface EditPatientData {
-  name: string;
-  age: number;
-  email: string;
-}
+export type EditPatientData = Partial<Omit<PatientData, "id">>;
 
 export interface PatientsExamsRowData {
   id: number;
@@ -118,7 +110,7 @@ export interface ExamResultResponse {
 
 // Combinar os dados do paciente com a lista de exames
 export interface PatientDataAndExams {
-  patient: PatientDataResponse;
+  patient: PatientData;
   exams: ExamResultResponse[];
 }
 
@@ -129,6 +121,18 @@ export interface PatientExam {
   created_at: string;
   doctor_name: string;
   doctor_email?: string;
+  doctor_feedback?: string;
+}
+
+export interface DoctorExam {
+  id: number;
+  exam_name: string;
+  ecg_image_base64?: string;
+  model_result_image_base64?: string;
+  result_json: any;
+  created_at: string;
+  patient_name: string;
+  patient_email?: string;
   doctor_feedback?: string;
 }
 

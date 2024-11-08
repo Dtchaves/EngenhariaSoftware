@@ -1,36 +1,21 @@
-"use client";
-import { apiUrl } from "@/app/shared/constants";
-import { PatientsExamsRowData } from "@/app/shared/utils";
+"use server";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { apiUrl } from "@/app/shared/constants";
+import { PatientsExamsRowData, ErrorResponse } from "@/app/shared/utils";
+import { cookies } from "next/headers";
 
-export function usePatientData() {
-  const [data, setData] = useState<PatientsExamsRowData[]>([]);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/api/doctor/patients`, {
-          withCredentials: true,
-        }); // Substitua pela rota real da API
-        const patients = await response.data;
-        console.log("patients: ", patients);
-        setData(patients);
-        if(response.data.message){
-          setMessage("Erro ao buscar dados dos pacientes: " + response.data.message);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar dados dos pacientes:", error);
-        setMessage(
-          "Erro ao buscar dados do paciente. Verifique sua conexão ou tente novamente."
-        );
-      }
-    };
-    // Simulação de chamada para obter dados dos pacientes
-
-    fetchPatients();
-  }, []);
-
-  return { data, message };
-};
+export async function getPatientsTableData(): Promise<PatientsExamsRowData[] | ErrorResponse> {
+  try {
+    const cookieHeader = await cookies();
+    const response = await axios.get<PatientsExamsRowData[] | ErrorResponse>(`${apiUrl}/api/doctor/patients`, {
+      withCredentials: true,
+      headers: {
+        Cookie: cookieHeader.toString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar dados dos pacientes:", error);
+    return { message: "Erro ao buscar dados dos pacientes. Verifique sua conexão ou tente novamente." };
+  }
+}

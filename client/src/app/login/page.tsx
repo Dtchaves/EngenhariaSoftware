@@ -5,8 +5,14 @@ import { UserColor, UserRole } from "../shared/utils";
 import { LoginForm } from "./components/login-form";
 import { useLogin } from "./hooks/use-login";
 import UserFormLayout from "../shared/components/UserFormLayout";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+  useEffect(() => {
+    router.refresh();
+  }, []);
+
   const { login, error, setError } = useLogin();
 
   const [userRole, setUserRole] = useState<UserRole>(UserRole.Doctor);

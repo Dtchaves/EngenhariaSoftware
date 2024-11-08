@@ -1,16 +1,19 @@
 // app/medico/components/PatientTable.tsx
 import React from "react";
 import Link from "next/link";
-import { usePatientData } from "../lib/get-patients-table-data";
+import { getPatientsTableData } from "../lib/get-patients-table-data";
+import { isErrorResponse } from "@/app/shared/utils";
 
-export default function PatientsTable() {
-  const { data, message } = usePatientData();
+export default async function PatientsTable() {
+  const data = await getPatientsTableData();
 
-  if (message !== "")
+  if (isErrorResponse(data)) {
     return (
-      <p className="text-red-500 font-semibold text-center my-4">{message}</p>
+      <p className="text-red-500 font-semibold text-center my-4">
+        {data.message}
+      </p>
     );
-
+  }
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">

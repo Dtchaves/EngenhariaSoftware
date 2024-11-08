@@ -1,7 +1,8 @@
+import base64
 from flask import Blueprint, request, jsonify, make_response, session
 from flask_login import login_required, current_user
 from api.schemas import doctor_schema, doctors_schema, patient_schema, patients_schema
-from api.models import ExamResult, Patient, db, Doctor, UserRole
+from api.models import ExamResult, MedicalReport, Patient, db, Doctor, UserRole
 from api.constants import BAD_REQUEST_CODE, CREATED_CODE, NOT_FOUND_CODE, SERVER_ERROR_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, SUCCESS_CODE, INVALID_CREDENTIALS_MESSAGE
 from api.auth import logout
 
@@ -74,6 +75,18 @@ def delete_current_doctor():
         doctor = Doctor.query.get(current_user.id)
         if not doctor:
             return make_response(jsonify({'message': 'Doctor not found'}), NOT_FOUND_CODE)
+        
+        exam_results = ExamResult.query.filter_by(patient_id=current_user.id).all()
+        for exam in exam_results:
+            db.session.delete(exam)
+            
+        medical_reports = MedicalReport.query.filter_by(patient_id=current_user.id).all()
+        for report in medical_reports:
+            db.session.delete(report)
+            
+        patients = Patient.query.filter_by(doctor_id=current_user.id).all()
+        for patient in patients:
+            db.session.delete(patient)
 
         logout()
         db.session.delete(doctor)
@@ -169,10 +182,10 @@ def get_patients():
 @login_required
 def get_patient_exams(patient_id):
     try:
-        if current_user.role != 'doctor':
+        if current_user.role != UserRole.DOCTOR:
             return make_response(jsonify({'message': 'Unauthorized access'}), FORBIDDEN_CODE)
         
-        patient = Patient.query.filter_by(patient_id=patient_id, doctor_id=current_user.id)
+        patient = Patient.query.filter_by(id=patient_id, doctor_id=current_user.id).first()
         
         if not patient:
             return make_response(jsonify({'message': 'Paciente não encontrado'}), NOT_FOUND_CODE)
@@ -185,9 +198,49 @@ def get_patient_exams(patient_id):
         
         return make_response(
             jsonify({
-                "patient": patient_schema.jsonify(patient),
+                "patient": patient_schema.dump(patient),
                 "exams": exams_data
             }), SUCCESS_CODE
         )
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), BAD_REQUEST_CODE)
+
+@routes.route('/doctor/patient/<int:patient_id>/<int:exam_id>', methods=['GET'])
+@login_required
+def get_patient_exam(patient_id, exam_id):
+    try:
+        if current_user.role != UserRole.DOCTOR:
+            return make_response(jsonify({'message': 'Unauthorized access'}), FORBIDDEN_CODE)
+        
+        patient = Patient.query.filter_by(id=patient_id, doctor_id=current_user.id).first()
+        
+        if not patient:
+            return make_response(jsonify({'message': 'Patient not found'}), NOT_FOUND_CODE)
+        
+        exam = ExamResult.query.filter_by(id=exam_id, patient_id=patient_id, doctor_id=current_user.id).first()
+        
+        if not exam:
+            return make_response(jsonify({'message': 'Exam not found'}), NOT_FOUND_CODE)
+        
+        with open(exam.ecg_image_path, "rb") as ecg_image_file:
+            encoded_ecg_image = base64.b64encode(ecg_image_file.read()).decode('utf-8')
+            
+        with open(exam.model_result_image_path, "rb") as model_result_image_file:
+            encoded_model_result_image = base64.b64encode(model_result_image_file.read()).decode('utf-8')
+            
+        exam_info = {
+            'id': exam.id,
+            'exam_name': exam.exam_name,
+            'ecg_image_base64': encoded_ecg_image,  # Imagem codificada em Base64
+            'model_result_image_base64': encoded_model_result_image,  # Imagem codificada em Base64
+            'result_json': exam.result,
+            'created_at': exam.created_at,
+            'patient_name': patient.name,
+            'patient_email': patient.email,
+            'doctor_feedback': exam.doctor_feedback
+        }
+        
+        return make_response(jsonify(exam_info), SUCCESS_CODE)
+        
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), BAD_REQUEST_CODE)

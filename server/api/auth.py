@@ -73,7 +73,7 @@ def login():
         user = Admin.query.filter_by(email=data['email']).first()
 
     if user and user.check_password(data['password']):
-        login_user(user, remember=True)
+        login_user(user)
         print(session)
         response = make_response(jsonify({
             'message': f'Welcome {user.name}',

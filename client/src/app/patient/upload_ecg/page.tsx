@@ -1,4 +1,4 @@
-import { ECGUploader } from "./components/ECGUpload";
+import ECGUploader from "./components/ECGUpload";
 
 export default function UploadECGPage() {
   return (
