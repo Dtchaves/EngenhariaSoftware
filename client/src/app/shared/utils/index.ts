@@ -56,12 +56,8 @@ export const DoctorOptions = [
 ];
 
 export const PatientOptions = [
-<<<<<<< Updated upstream
-  { label: "My Profile", href: "/patient/my_profile" },
-=======
   { label: "Home", href: "/patient" },
   { label: "My Profile", href: "/patient/profile" },
->>>>>>> Stashed changes
   { label: "Doctors", href: "/patient/doctors" },
   { label: "Upload ECG", href: "/patient/upload_ecg" },
 ];

@@ -1,16 +1,6 @@
 "use client";
 
-<<<<<<< Updated upstream
-// import React, { useState } from "react";
-// import GeneralInfo from "./components/generalInfo";
-// import DoctorProfile from "./components/doctorProfile";
-
-export default function DoctorPage() {
-  // const [view, setView] = useState<"general" | "profile">("general");
-
-=======
 export default function PatientPage() {
->>>>>>> Stashed changes
   return (
     <div className="relative min-h-screen">
       {/* Background image with blur */}
