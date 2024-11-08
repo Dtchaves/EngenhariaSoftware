@@ -51,14 +51,15 @@ export interface RegisterCredentials {
 
 export const DoctorOptions = [
   { label: "Home", href: "/doctor" },
-  { label: "My Profile", href: "/doctor/profile" },
-  { label: "Patients", href: "/doctor/patients" },
+  { label: "Meu perfil", href: "/doctor/profile" },
+  { label: "Pacientes", href: "/doctor/patients" },
 ];
 
 export const PatientOptions = [
-  { label: "My Profile", href: "/patient/profile" },
-  { label: "Doctors", href: "/patient/doctors" },
-  { label: "Upload ECG", href: "/patient/upload_ecg" },
+  { label: "Meu perfil", href: "/patient/profile" },
+  { label: "Médico", href: "/patient/doctor" },
+  { label: "Meus exames", href: "/patient/exams" },
+  { label: "Fazer upload de ECG", href: "/patient/upload_ecg" },
 ];
 
 export interface DoctorData {
@@ -69,7 +70,7 @@ export interface DoctorData {
   email: string;
 }
 
-export interface PatientData {
+export interface PatientDataResponse {
   id: number;
   name: string;
   age: number;
@@ -100,3 +101,41 @@ export interface PatientExamsTableRowData {
   name: string;
   date: string;
 };
+
+// Definir os dados de cada exame
+export interface ExamResultResponse {
+  id: number;
+  patient_id: number;
+  patient_name: string;
+  doctor_id: number;
+  exam_name: string;
+  doctor_feedback?: string;
+  result: any; // Especifique o tipo do JSON do resultado se souber, caso contrário, use `any`
+  created_at: string; // Pode usar `Date` se os dados estiverem em formato de data JS
+  updated_at: string; // Pode usar `Date` se os dados estiverem em formato de data JS
+  doctor_email: string;
+}
+
+// Combinar os dados do paciente com a lista de exames
+export interface PatientDataAndExams {
+  patient: PatientDataResponse;
+  exams: ExamResultResponse[];
+}
+
+export interface PatientExam {
+  id: number;
+  exam_name: string;
+  ecg_image_base64?: string;
+  created_at: string;
+  doctor_name: string;
+  doctor_email?: string;
+  doctor_feedback?: string;
+}
+
+export interface ErrorResponse {
+  message: string;
+}
+
+export function isErrorResponse(data: any): data is ErrorResponse {
+  return 'message' in data && typeof data.message === 'string';
+}

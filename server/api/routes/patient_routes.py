@@ -1,11 +1,11 @@
 import base64
 import os
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, current_app, request, jsonify, make_response, send_file, send_from_directory, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 import numpy as np
 import torch
 from api.schemas import patient_schema, patients_schema
-from api.models import ExamResult, UserRole, db, Patient
+from api.models import Doctor, ExamResult, UserRole, db, Patient
 from api.utils import allowed_file, load_model, make_prediction, save_file
 from PIL import Image
 from api.config import Config
@@ -14,7 +14,11 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 routes = Blueprint('patient_routes', __name__)
-model = load_model(Config.MODEL_PATH)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model = load_model(Config.MODEL_PATH, device)
+
+model_images_path = 'server/static/model_output_images'
+ecg_images_path = 'server/static/ecg_images'
 # model = load_model('/home/rafaelmg/Documents/EngenhariaSoftware/server/models/MoEGateC.pt')
 
 # Create a new patient
@@ -153,27 +157,91 @@ def upload_exam():
         file_np_array = np.loadtxt(filepath, delimiter=",")
         
         img_tensor = torch.from_numpy(file_np_array).float().unsqueeze(0)
-        img_tensor = img_tensor.view(1, 12, -1) 
+        if img_tensor.shape[1] > img_tensor.shape[2]:
+            img_tensor = img_tensor.permute(0, 2, 1).to(device) 
         
-        result = make_prediction(model, img_tensor)
-        result_dict = {f'd{i+1}': result[i].item() for i in range(6)}
+        result_dict = make_prediction(model, img_tensor, f'{model_images_path}/{name}_model_plot.png')
         
-        plotar_ecg_unico(torch.from_numpy(file_np_array).flatten(), 'plot.png')
+        plotar_ecg_unico(torch.from_numpy(file_np_array).flatten(), f'{ecg_images_path}/{name}_ecg_plot.png')
         
-        with open('plot.png', "rb") as img_file:
-            encoded_img = base64.b64encode(img_file.read()).decode('utf-8')
+        # with open(f'ecg_images/ecg_{name}_plot.png', "rb") as img_file:
+        #     encoded_img = base64.b64encode(img_file.read()).decode('utf-8')
 
-        result_data = {'image': encoded_img }
+        # result_data = {'image': encoded_img }
         
         # Query the patient object
         patient = Patient.query.get(current_user.id)
         if not patient:
             return make_response(jsonify({'message': 'Patient not found'}), 404)
         
-        exam_result = ExamResult(patient_id=current_user.id, doctor_id=patient.doctor.id, exam_name=name, result=result_dict)
+        exam_result = ExamResult(patient_id=current_user.id, doctor_id=patient.doctor.id, exam_name=name, result=result_dict, ecg_image_path=f'{ecg_images_path}/{name}_ecg_plot.png', model_result_image_path=f'{model_images_path}/{name}_model_plot.png')
         db.session.add(exam_result)
         db.session.commit()
 
-        return make_response(jsonify({'message': 'File uploaded successfully', 'image': encoded_img}), 200)
+        return make_response(jsonify({'examID': exam_result.id}), 201)
     except Exception as e:
         return make_response(jsonify({'message': str(e)}), 500)
+    
+@routes.route('/patient/exams', methods=['GET'])
+@login_required
+def get_patient_exams():
+    try:
+        if current_user.role != UserRole.PATIENT:
+            return make_response(jsonify({'message': 'Acesso não autorizado'}), 403)
+        
+        exams = ExamResult.query.filter_by(patient_id=current_user.id).all()
+        exams_data = []
+        for exam in exams:
+            doctor = Doctor.query.get(exam.doctor_id)
+
+            exam_info = {
+                'id': exam.id,
+                'exam_name': exam.exam_name,
+                'created_at': exam.created_at,
+                'doctor_name': doctor.name,
+            }
+            exams_data.append(exam_info)
+        
+        return make_response(jsonify(exams_data), 200)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), 500)
+    
+@routes.route('/patient/exams/<int:exam_id>', methods=['GET'])
+@login_required
+def get_patient_exam(exam_id):
+    try:
+        if current_user.role != UserRole.PATIENT:
+            return make_response(jsonify({'message': 'Acesso não autorizado'}), 403)
+        
+        exam = ExamResult.query.get(exam_id)
+        if not exam:
+            return make_response(jsonify({'message': 'Exame não encontrado'}), 404)
+        
+        doctor = Doctor.query.get(exam.doctor_id)
+        
+        # Carregar e codificar a imagem em Base64
+        # image_path = os.path.join(current_app.root_path, 'static/ecg_images', exam.ecg_image_path)
+        with open(exam.ecg_image_path, "rb") as image_file:
+            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+        
+        exam_info = {
+            'id': exam.id,
+            'exam_name': exam.exam_name,
+            'ecg_image_base64': encoded_image,  # Imagem codificada em Base64
+            'created_at': exam.created_at,
+            'doctor_name': doctor.name,
+            'doctor_email': doctor.email,
+            'doctor_feedback': exam.doctor_feedback
+        }
+        
+        return make_response(jsonify(exam_info), 200)
+    except Exception as e:
+        return make_response(jsonify({'message': str(e)}), 500)
+
+
+@routes.route('/images/<filename>')
+def serve_ecg_image(filename):
+    # filename = filename.replace('server/', '')
+    # # Construa o caminho completo do arquivo
+    # file_path = os.path.join(current_app.root_path, filename)
+    return send_file(filename)

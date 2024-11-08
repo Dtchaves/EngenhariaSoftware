@@ -1,19 +1,17 @@
-// app/medico/patients/[patientID]/[examID]/page.tsx
-import { useRouter } from "next/router";
 import ExamDetail from "../../../components/ExamDetails";
 import SendExamResult from "../../../components/SendExamResult";
 
-const ExamDetailPage = () => {
-  const router = useRouter();
-  const { patientID, examID } = router.query;
-
+export default async function ExamDetailPage({
+  params,
+}: {
+  params: Promise<{ patientID: number, examID: number }>
+}) {
+  const { patientID, examID } = await params;
   return (
     <div>
       <h1>Detalhes do Exame</h1>
-      <ExamDetail patientId={patientID as string} examId={examID as string} />
-      <SendExamResult patientId={patientID as string} examId={examID as string} doctorEmail="doctor@example.com" />
+      {/* <ExamDetail patientId={patientID} examId={examID} /> */}
+      <SendExamResult patientId={patientID as unknown as string} examId={examID as unknown as string} doctorEmail="doctor@example.com" />
     </div>
   );
 };
-
-export default ExamDetailPage;

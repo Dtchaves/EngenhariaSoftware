@@ -2,13 +2,13 @@
 // app/paciente/hooks/usePatientProfile.ts
 import axios from "axios";
 import { apiUrl } from "@/app/shared/constants";
-import { PatientData } from "@/app/shared/utils";
+import { PatientDataResponse } from "@/app/shared/utils";
 import { cookies } from "next/headers";
 
 export async function getPatientProfile() {
   try {
     const cookieHeader = await cookies();
-    const response = await axios.get<PatientData>(`${apiUrl}/api/patient/profile`, {
+    const response = await axios.get<PatientDataResponse>(`${apiUrl}/api/patient/profile`, {
       withCredentials: true,
       headers: {
         Cookie: cookieHeader.toString(),

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { deletePatientProfile } from "../hooks/deletePatientProfile";
+import { deletePatientProfile } from "../hooks/delete-patient-profile";
 
 export default function ActionButtons() {
   const handleDeleteClick = () => {

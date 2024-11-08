@@ -55,4 +55,8 @@ next-env.d.ts
 server/models/
 server/data/
 server/results/
+server/static/
 server/use.ipynb
+server/rafa.ipynb
+
+uploads/

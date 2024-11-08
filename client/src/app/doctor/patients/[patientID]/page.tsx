@@ -1,23 +1,25 @@
-// app/medico/patients/[patientID]/page.tsx
-import { useRouter } from "next/router";
-import ExamTable from "../../components/ExamTable";
+import { isErrorResponse } from "@/app/shared/utils";
+import PatientExamsTable from "../../../shared/components/PatientExamsTable";
+import PatientDoctorProfile from "./components/PatientDoctorProfile";
+import { getPatientDataAndExams } from "./hooks/getPatientDataAndExams";
 
-const PatientExamsPage = () => {
-  const router = useRouter();
-  const { patientID } = router.query;
+export default async function PatientDoctorPage({
+  params,
+}: {
+  params: Promise<{ patientID: number }>
+}) {
+  const patientID = (await params).patientID;
 
-  // Exemplo de dados de exames
-  const exams = [
-    { id: "1", date: "2024-11-01", description: "ECG - 01 Nov" },
-    { id: "2", date: "2024-10-25", description: "ECG - 25 Oct" },
-  ];
+  const data = await getPatientDataAndExams(patientID);
+  
+  if (isErrorResponse(data)) {
+    return <div className="bg-red-500 text-white p-4 text-center">{data.message}</div>;
+  }
 
   return (
     <div>
-      <h1>Exames do Paciente {patientID}</h1>
-      <ExamTable patientId={patientID as string} exams={exams} />
+      <PatientDoctorProfile patientData={data.patient} />
+      <PatientExamsTable exams={data.exams} context="doctor"/>
     </div>
   );
-};
-
-export default PatientExamsPage;
+}

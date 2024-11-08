@@ -67,7 +67,8 @@ class ExamResult(db.Model):
     result = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    doctor_email = db.Column(db.String(100), nullable=False)
+    ecg_image_path = db.Column(db.String(255), nullable=True)
+    model_result_image_path = db.Column(db.String(255), nullable=True)
 
 class Message(db.Model):
     __tablename__ = 'messages'

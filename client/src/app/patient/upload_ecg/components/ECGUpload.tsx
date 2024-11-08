@@ -5,8 +5,7 @@ import { useActionState } from "react";
 import FormInput from "@/app/shared/components/FormInput";
 
 const initialState = {
-  imageData: null,
-  message: null,
+  message: '',
 };
 
 export function ECGUploader() {
@@ -66,7 +65,7 @@ export function ECGUploader() {
         </button>
       </form>
 
-      {/* Exibição da imagem */}
+      {/* Exibição da imagem
       {state.imageData && (
         <div>
           <h3>ECG Image:</h3>
@@ -76,7 +75,7 @@ export function ECGUploader() {
             style={{ marginTop: "20px", maxWidth: "100%" }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

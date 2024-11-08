@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import FormInput from "@/app/shared/components/FormInput";
 import { EditPatientData } from "@/app/shared/utils";
 import { editPatientProfile } from "../hooks/edit-patient-profile";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getPatientProfile } from "../hooks/get-patient-profile";
 
 export default function PatientProfileEditor() {
@@ -14,6 +14,7 @@ export default function PatientProfileEditor() {
     age: 0,
   });
   const [error, setError] = useState("");
+  const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +80,7 @@ export default function PatientProfileEditor() {
               Salvar
             </button>
             <button
-              onClick={() => redirect("/patient/profile")}
+              onClick={() => router.push("/patient/profile")}
               className="mt-4 bg-gray-500 text-white p-2 rounded"
             >
               Cancelar
