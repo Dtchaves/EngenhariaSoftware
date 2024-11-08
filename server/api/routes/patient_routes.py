@@ -182,7 +182,6 @@ def upload_exam():
         img_tensor = torch.from_numpy(file_np_array).float().unsqueeze(0)
         if img_tensor.shape[1] > img_tensor.shape[2]:
             img_tensor = img_tensor.permute(0, 2, 1).to(device) 
-        print(img_tensor)
         
         result_dict = make_prediction(model, img_tensor, f'{model_images_path}/{name}_model_plot.png')
         
