@@ -11,8 +11,8 @@ interface TopBarProps {
 
 export default async function TopBar( { showSidebar, userRole }: TopBarProps) {
   // const showSidebar = user !== null;
-  const color = userRole === "doctor" ? "bg-blue-900" : "bg-red-900";
-
+  let color = userRole === "doctor" ? "bg-blue-900" : "bg-red-900";
+  if(!showSidebar) color = "bg-gray-900";
   return (
     <div className={`${color} flex justify-between items-center p-2 text-white h-20`}>
       <div className="flex items-center">
