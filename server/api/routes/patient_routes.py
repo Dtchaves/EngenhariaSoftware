@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from api.schemas import patient_schema, patients_schema, doctor_schema
 from api.models import Doctor, ExamResult, MedicalReport, UserRole, db, Patient
-from api.utils import allowed_file, load_model, make_prediction, save_file
+from api.utils import allowed_file, load_model, make_prediction, parse_filename, save_file
 from PIL import Image
 from api.config import Config
 from api.auth import logout
@@ -172,7 +172,7 @@ def upload_exam():
             return make_response(jsonify({'message': 'Only patients can upload exams'}), 403)
 
         file = request.files.get('file')
-        name = request.form.get('name')
+        name = parse_filename(request.form.get('name'))
         if not file or not allowed_file(file.filename, Config.ALLOWED_EXTENSIONS):
             return make_response(jsonify({'message': 'File not found or invalid file type'}), 400)
 

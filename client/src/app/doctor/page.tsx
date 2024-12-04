@@ -108,7 +108,7 @@ export default function DoctorPage() {
                 {/* Autor 3 */}
                 <div className="flex flex-col items-center">
                   <img
-                    src="rafa.jpg"
+                    src="rafa_serio.jpeg"
                     alt="Autor 3"
                     className="rounded-full w-32 h-32 mb-4"
                   />

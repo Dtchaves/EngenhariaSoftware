@@ -6,10 +6,14 @@ def save_file(file, upload_folder, name: str):
     """Saves a file and returns the saved filepath"""
     if not file:
         return None
-
+    
     filepath = os.path.join(upload_folder, f"{name}.csv")
     file.save(filepath)
     return filepath
+
+def parse_filename(filename):
+    """Parses the filename to remove special characters"""
+    return secure_filename(filename)
 
 def allowed_file(filename, allowed_extensions):
     """Checks if the file has an allowed extension"""
