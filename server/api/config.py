@@ -17,3 +17,4 @@ class Config:
     SESSION_COOKIE_HTTPONLY=True         # Prevents JavaScript access to the cookie
     SESSION_COOKIE_SECURE=True          # Only send cookie over HTTPS
     SESSION_COOKIE_SAMESITE=None        # Restricts cookie on cross-site requests
+    

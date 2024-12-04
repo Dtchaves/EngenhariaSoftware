@@ -27,13 +27,15 @@ export default async function TopBar( { showSidebar, userRole }: TopBarProps) {
         />
       </div>
       <div className="flex items-center">
-      <Image
-          src="/logos/logo-ufmg.png"
-          alt="Logo 1"
-          width={60}
-          height={60}
-          className="mr-12 ml-12"
-        />
+        <a href="https://ufmg.br" target="_blank" rel="noopener noreferrer">
+          <Image
+            src="/logos/logo-ufmg.png"
+            alt="Logo 1"
+            width={90}
+            height={90}
+            className="mr-12 ml-12"
+          />
+        </a>
       </div>
     </div>
   );
